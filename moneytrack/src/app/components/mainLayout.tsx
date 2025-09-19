@@ -1,6 +1,18 @@
 import { ReactNode } from "react";
 import Head from "../head";
 import { ToollBar } from "./toolbar";
+import { NavBar } from "./navBar";
+import { Hammersmith_One, Montserrat } from "next/font/google";
+import { ModalAddTransfer, useModelTransition } from "./modalAddTransfer";
+
+export const hammersmithOne = Hammersmith_One({
+  weight: "400",
+  subsets: ["latin"],
+});
+export const montserrat = Montserrat({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+});
 export default function MainLayout({
   children,
   title,
@@ -8,13 +20,17 @@ export default function MainLayout({
   children: ReactNode;
   title: string;
 }) {
+  const { isOpen, open, close } = useModelTransition();
+
   return (
     <div className="flex flex-col justify-center items-center h-screen w-screen bg-zinc-100 relative ">
       <Head title={title} />
       <ToollBar />
-      <div className="flex flex-col p-0 m-0 w-fit h-fit max-w-[1000px]  drop-shadow-2xl shadow-2xl rounded-md bg-zinc-50">
+      <div className="flex flex-col p-0 m-0 w-fit h-[86%] max-w-[80vw]  drop-shadow-2xl shadow-2xl rounded-md bg-zinc-50">
         {children}
       </div>
+      <ModalAddTransfer isOpen={isOpen} close={close} />
+      <NavBar route={title} isOpen={isOpen} open={open} />
     </div>
   );
 }
