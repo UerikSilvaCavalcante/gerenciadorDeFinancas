@@ -18,7 +18,7 @@ export const NavBar = ({
     <div className="absolute bottom-3  z-20">
       <div className="flex justify-center items-center relative transition-all duration-[450ms] ease-in-out w-auto ">
         <article className="border border-solid border-green-950 w-full ease-in-out duration-500 left-0 rounded-2xl flex shadow-lg shadow-black/15 bg-green-500">
-          <Link href="/home">
+          <Link href="/home" className="cursor-pointer">
             <label
               className="has-[:checked]:shadow-lg relative w-full h-16 p-4 ease-in-out duration-300 border-solid border-black/10 has-[:checked]:border group flex flex-row gap-3 items-center justify-center text-black rounded-xl"
               htmlFor="home"
@@ -33,14 +33,14 @@ export const NavBar = ({
               <Image
                 src={house}
                 alt="plus"
-                className="peer-hover/expand:scale-125 peer-hover/expand:text-green-50 peer-hover/expand:fill-green-50 peer-checked/expand:text-green-50 peer-checked/expand:fill-green-50 text-2xl peer-checked/expand:scale-125 ease-in-out duration-300"
+                className="peer-hover/expand:scale-125 peer-hover/expand:text-green-50 peer-hover/expand:fill-green-50 peer-checked/expand:text-green-50 peer-checked/expand:fill-green-50 text-2xl peer-checked/expand:scale-125 ease-in-out duration-300 cursor-pointer"
                 width={24}
                 height={24}
               />
             </label>
           </Link>
 
-          <Link href="#" onClick={open}>
+          <Link href="#" onClick={open} className="cursor-pointer">
             <label
               className="has-[:checked]:shadow-lg relative w-full h-16 p-4 ease-in-out duration-300 border-solid border-black/10 has-[:checked]:border group flex flex-row gap-3 items-center justify-center text-black rounded-xl"
               htmlFor="add"
@@ -49,13 +49,15 @@ export const NavBar = ({
                 id="add"
                 name="path"
                 type="radio"
-                className="hidden peer/expand"
-                defaultChecked={isOpen}
+                className="hidden peer/expand "
+                defaultChecked={
+                  isOpen 
+                }
               />
               <Image
                 src={plus}
                 alt="plus"
-                className="peer-hover/expand:scale-125 peer-hover/expand:text-green-50 peer-hover/expand:fill-green-50 peer-checked/expand:text-green-50 peer-checked/expand:fill-green-50 text-2xl peer-checked/expand:scale-125 ease-in-out duration-300"
+                className="peer-hover/expand:scale-125 peer-hover/expand:text-green-50 peer-hover/expand:fill-green-50 peer-checked/expand:text-green-50 peer-checked/expand:fill-green-50 text-2xl peer-checked/expand:scale-125 ease-in-out duration-300 cursor-pointer"
                 width={24}
                 height={24}
               />
@@ -65,7 +67,7 @@ export const NavBar = ({
             </label>
           </Link>
 
-          <Link href="/transfers">
+          <Link href="/transfers" className="cursor-pointer">
             <label
               className="has-[:checked]:shadow-lg relative w-full h-16 p-4 ease-in-out duration-300 border-solid border-black/10 has-[:checked]:border group flex flex-row gap-3 items-center justify-center text-black rounded-xl"
               htmlFor="transfers"
@@ -74,13 +76,13 @@ export const NavBar = ({
                 id="transfers"
                 name="path"
                 type="radio"
-                className="hidden peer/expand"
-                defaultChecked={route === "Transfers"}
+                className="hidden peer/expand cursor-pointer"
+                defaultChecked={route === "Transfers" && isOpen == false}
               />
               <Image
                 src={list}
                 alt="plus"
-                className="peer-hover/expand:scale-125 peer-hover/expand:text-green-50 peer-hover/expand:fill-green-50 peer-checked/expand:text-green-50 peer-checked/expand:fill-green-50 text-2xl peer-checked/expand:scale-125 ease-in-out duration-300"
+                className="peer-hover/expand:scale-125 peer-hover/expand:text-green-50 peer-hover/expand:fill-green-50 peer-checked/expand:text-green-50 peer-checked/expand:fill-green-50 text-2xl peer-checked/expand:scale-125 ease-in-out duration-300 cursor-pointer"
                 width={24}
                 height={24}
               />

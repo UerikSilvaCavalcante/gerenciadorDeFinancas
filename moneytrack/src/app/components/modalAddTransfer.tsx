@@ -10,13 +10,75 @@ import {
 import { useState } from "react";
 import { PrimaryButton, SecundaryButton } from "./UI/buttons";
 import { hammersmithOne, montserrat } from "./mainLayout";
-import { Input } from "./UI/input";
+import { Input, Select } from "./UI/input";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 export const useModelTransition = () => {
   const [isOpen, setIsOpen] = useState(false);
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
   return { isOpen, open, close };
 };
+
+const data = [
+  {
+    bank: "Banco 1",
+    type: "Cartao 1",
+    bander: "Bander 1",
+    color: "green",
+  },
+  {
+    bank: "Banco 2",
+    type: "Cartao 2",
+    bander: "Bander 2",
+    color: "black",
+  },
+  {
+    bank: "Banco 3",
+    type: "Cartao 3",
+    bander: "Bander 3",
+    color: "orange",
+  },
+  {
+    bank: "Banco 4",
+    type: "Cartao 4",
+    bander: "Bander 4",
+    color: "blueviolet",
+  },
+];
+
+enum typeEnum {
+  Lazer = 1,
+  Alimentação = 2,
+  Transporte = 3,
+  Saúde = 4,
+  Conta = 5,
+  Outros = 6,
+}
+
+enum methoodEnum {
+  credit_Card = 1,
+  Debit_Card = 2,
+  Cash = 3,
+  Transfer = 4,
+  Pix = 5,
+}
+
+const trasnferForm = z.object({
+  value: z
+    .number({ message: "O valor mínimo é 0" })
+    .min(0, { message: "O valor mínimo é 0" }),
+  type: z.nativeEnum(typeEnum, { message: "Selecione pelo menos um tipo" }),
+  methood: z.nativeEnum(methoodEnum, {
+    message: "Selecione pelo menos um método",
+  }),
+  data: z.date({ message: "A data deve ser futura" }),
+  cartaoId: z.number(),
+  desc: z.string().optional(),
+});
+
+type transferFormType = z.infer<typeof trasnferForm>;
 
 export const ModalAddTransfer = ({
   isOpen,
@@ -25,6 +87,19 @@ export const ModalAddTransfer = ({
   isOpen: boolean;
   close: () => void;
 }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<transferFormType>({
+    resolver: zodResolver(trasnferForm),
+  });
+
+  const handleSubmitForm = (data: transferFormType) => {
+    console.log(data);
+    reset();
+  };
   return (
     <Dialog
       open={isOpen}
@@ -46,34 +121,147 @@ export const ModalAddTransfer = ({
           <h1
             className={`${hammersmithOne.className} text-green-900 text-2xl text-center w-full`}
           >
-            Adicionara Gasto
+            Adicionar Gasto
           </h1>
           <form
             action=""
+            onSubmit={handleSubmit(handleSubmitForm)}
             className="h-full w-full flex flex-col justify-between items-center p-2  "
           >
-            <div className="w-full flex flex-col justify-center items-center">
-              <div className="w-full flex flex-col justify-start items-start">
+            <div className="w-full flex flex-col justify-center items-center gap-2">
+              <div className="w-full flex flex-col justify-start items-start bg-green-500 rounded-md p-2">
                 <label
                   className={`${hammersmithOne.className} text-green-900 text-sm text-left w-full`}
-                  htmlFor="valor"
+                  htmlFor="value"
                 >
-                  Valor
+                  Valor{" "}
+                  {errors.value && (
+                    <p className="text-red-500">{errors.value.message}</p>
+                  )}
                 </label>
                 <Input
-                  id="valor"
+                  id="value"
                   type="number"
                   placeholder="R$ 0,00"
                   width="w-full"
                   min={0}
                   step={0.01}
-                  required
+                  {...register("value", { valueAsNumber: true })}
+                />
+              </div>
+              <div className="w-full flex justify-between items-center gap-2">
+                <div className="w-full flex flex-col justify-start items-start bg-green-500 rounded-md p-2">
+                  <label
+                    className={`${hammersmithOne.className} text-green-900 text-sm text-left w-full`}
+                    htmlFor="type"
+                  >
+                    Tipo de Transferencia{" "}
+                    {errors.type && (
+                      <p className="text-red-500">{errors.type.message}</p>
+                    )}
+                  </label>
+                  <Select
+                    id="type"
+                    width="w-full"
+                    {...register("type", { valueAsNumber: true })}
+                  >
+                    <option value="0">Selecione</option>
+                    <option value={1}>Lazer</option>
+                    <option value={2}>Alimentação</option>
+                    <option value={3}>Trasnporte</option>
+                    <option value={4}>Saúde</option>
+                    <option value={5}>Conta</option>
+                    <option value={6}>Outro</option>
+                  </Select>
+                </div>
+                <div className="w-full flex flex-col justify-start items-start bg-green-500 rounded-md p-2">
+                  <label
+                    className={`${hammersmithOne.className} text-green-900 text-sm text-left w-full`}
+                    htmlFor="methood"
+                  >
+                    Metodo de Pagamento{" "}
+                    {errors.methood && (
+                      <p className="text-red-500">{errors.methood.message}</p>
+                    )}
+                  </label>
+                  <Select
+                    id="methood"
+                    width="w-full"
+                    {...register("methood", { valueAsNumber: true })}
+                  >
+                    <option value="0">Selecione</option>
+                    <option value={1}>Cartão de Credito</option>
+                    <option value={2}>Cartão de Debito</option>
+                    <option value={3}>Dinheiro</option>
+                    <option value={4}>Transferência Bancária</option>
+                    <option value={5}>Pix</option>
+                  </Select>
+                </div>
+              </div>
+              <div className="w-full flex justify-between items-center gap-2">
+                <div className="w-full flex flex-col justify-start items-start bg-green-500 rounded-md p-2">
+                  <label
+                    className={`${hammersmithOne.className} text-green-900 text-sm text-left w-full`}
+                    htmlFor="data"
+                  >
+                    Data{" "}
+                    {errors.data && (
+                      <p className="text-red-500">{errors.data.message}</p>
+                    )}
+                  </label>
+                  <Input
+                    id="data"
+                    type="date"
+                    width="w-full"
+                    {...register("data", { valueAsDate: true })}
+                  />
+                </div>
+                <div className="w-full flex flex-col justify-start items-start bg-green-500 rounded-md p-2">
+                  <label
+                    className={`${hammersmithOne.className} text-green-900 text-sm text-left w-full`}
+                    htmlFor="cardId"
+                  >
+                    Cartão{" "}
+                    {errors.cartaoId && (
+                      <p className="text-red-500">{errors.cartaoId.message}</p>
+                    )}
+                  </label>
+                  <Select
+                    id="cardId"
+                    width="w-full"
+                    {...register("cartaoId", { valueAsNumber: true })}
+                  >
+                    <option value="0">Selecione</option>
+                    {data.map((cd, index) => (
+                      <option key={index} value={index}>
+                        {cd.bank} - {cd.type}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+              </div>
+              <div className="w-full flex flex-col justify-start items-start bg-green-500 rounded-md p-2">
+                <label
+                  className={`${hammersmithOne.className} text-green-900 text-sm text-left w-full`}
+                  htmlFor="desc"
+                >
+                  Descrição{" "}
+                  {errors.desc && (
+                    <p className="text-red-500">{errors.desc.message}</p>
+                  )}
+                </label>
+                <Input
+                  id="desc"
+                  type="text"
+                  placeholder="Coca-cola...."
+                  width="w-full"
+                  {...register("desc")}
                 />
               </div>
             </div>
             <div className="w-full p-2 flex flex-row justify-center items-center gap-2.5">
               <PrimaryButton type="submit" width="w-full" content="Adicionar" />
-              <SecundaryButton type="reset" width="w-full" content="Cancelar" />
+              <SecundaryButton type="reset" width="w-full" content="Cancelar" onClick={close}/>
             </div>
           </form>
           <div className="w-full flex  justify-center items-center ">
