@@ -13,7 +13,7 @@ class ResponseTransferSchema(Schema):
     value:Decimal
     date:str
     description:str
-    type_transfer:str
+    type_transfer:int
     payment_method:str
     card_id:str | None = None
 
@@ -22,12 +22,16 @@ from typing import List, Dict
 class TransferListItemSchema(Schema):
     id: int
     value: Decimal
-    date: str
-    type_transfer: str
+    type_transfer: int
+    desc: str | None
     payment_method: str
 
+class TransferDaySchema(Schema):
+    day: str
+    valueTot: Decimal
+    transfers: List[TransferListItemSchema]
 
 
 class ResponseListTransferSchema(Schema):
-    month: str
-    transfers: List[TransferListItemSchema]
+    mounth: str
+    days: List[TransferDaySchema]

@@ -1,10 +1,8 @@
-import Image from "next/image";
-
+"use client";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import Login from "./login/page";
 
 export default function Home() {
-  return (
-    <div>
-
-    </div>
-  );
+  return <Login />;
 }

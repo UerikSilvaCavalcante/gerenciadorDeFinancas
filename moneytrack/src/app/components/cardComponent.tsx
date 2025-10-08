@@ -1,4 +1,7 @@
 import { Hammersmith_One } from "next/font/google";
+import Link from "next/link";
+import Image from "next/image";
+import info from "../assets/info-circle-fill.svg";
 
 const hammersmithOne = Hammersmith_One({
   weight: "400",
@@ -6,16 +9,19 @@ const hammersmithOne = Hammersmith_One({
 });
 
 export const CardComponent = ({
+  id,
   bank,
   type,
   bander,
   color,
 }: {
+  id:number;
   bank: string;
   type: string;
   bander: string;
   color: string;
 }) => {
+
   return (
     <div
       className="flex flex-col justify-around items-center min-w-[250px] min-h-[120px] max-w-[300px] max-h-[200px] rounded-lg drop-shadow-2xl shadow-2xl"
@@ -28,6 +34,9 @@ export const CardComponent = ({
           >
             {bank}
           </h1>
+          <Link href={`card_transfer/${id}`} className="cursor-pointer">
+            <Image src={info} alt="Info" width={20} height={20}  />
+          </Link>
         </div>
         <div className="flex flex-row justify-between w-full">
           <h1

@@ -1,9 +1,11 @@
+"use client";
 import { ReactNode } from "react";
 import Head from "../head";
 import { ToollBar } from "./toolbar";
 import { NavBar } from "./navBar";
 import { Hammersmith_One, Montserrat } from "next/font/google";
 import { ModalAddTransfer, useModelTransition } from "./modalAddTransfer";
+import ClientProvider from "./clientProvider";
 
 export const hammersmithOne = Hammersmith_One({
   weight: "400",
@@ -24,13 +26,15 @@ export default function MainLayout({
 
   return (
     <div className="flex flex-col justify-center items-center h-screen w-screen bg-zinc-100 relative ">
-      <Head title={title} />
-      <ToollBar />
-      <div className="flex flex-col p-0 m-0 w-fit h-[86%] max-w-[80vw]  drop-shadow-2xl shadow-2xl rounded-md bg-zinc-50">
-        {children}
-      </div>
-      <ModalAddTransfer isOpen={isOpen} close={close} />
-      <NavBar route={title} isOpen={isOpen} open={open} />
+      <ClientProvider>
+        <Head title={title} />
+        <ToollBar />
+        <div className="flex flex-col p-0 m-0 w-fit h-[90%] max-w-[80vw]  drop-shadow-2xl shadow-2xl rounded-md bg-zinc-50">
+          {children}
+        </div>
+        <ModalAddTransfer isOpen={isOpen} close={close} />
+        <NavBar route={title} isOpen={isOpen} open={open} />
+      </ClientProvider>
     </div>
   );
 }

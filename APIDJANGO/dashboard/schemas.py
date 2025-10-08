@@ -3,18 +3,13 @@ from decimal import Decimal
 
 
 class PltsMesSchema(Schema):
-    mes: int
-    eixoX: list[int]
-    eixoY: list[Decimal]
-
-class ResponseMesSchema(Schema):
-    mes_atual: PltsMesSchema
-    mes_passado: PltsMesSchema
+    day: int
+    act_mounth: Decimal
+    past_mounth: Decimal
 
 class ResponseGastosSchema(Schema):
-    eixoX: list[str]
-    eixoY: list[Decimal]
-    total: float
+    categoria: str
+    gasto: Decimal
 
 
 class ResponseTransfersSchema(Schema):

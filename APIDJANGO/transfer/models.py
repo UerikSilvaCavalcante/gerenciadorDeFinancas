@@ -8,24 +8,17 @@ class Transfer(models.Model):
     user_id = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='transfers')
     value = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.CharField(max_length=255, blank=True, null=True)
-    class TypeTransfer(models.TextChoices):
-        LAZER = 'Lazer',
-        ALIMENTACAO = 'Alimentação',
-        TRANSPORTE = 'Transporte',
-        SAUDE = 'Saúde',
-        CONTAS = 'Conta',
-        OUTROS = 'Outros'
+    
+    
 
-    type_transfer = models.CharField(max_length=50, choices=TypeTransfer.choices, default=TypeTransfer.OUTROS)
-    date = models.DateTimeField(default=timezone.now)
-    class PaymentMethod(models.TextChoices):
-        CREDIT_CARD = 'Cartão de Crédito',
-        DEBIT_CARD = 'Cartão de Débito',
-        CASH = 'Dinheiro',
-        BANK_TRANSFER = 'Transferência Bancária',
-        PIX = 'Pix'
-    payment_method = models.CharField(max_length=50, choices=PaymentMethod.choices, default=PaymentMethod.CREDIT_CARD)
+    TypeTransfer = models.IntegerChoices("type_transfer", "Lazer Alimentação Saude Contas Transporte Outros")
+    type_transfer = models.IntegerField(choices=TypeTransfer.choices, default=TypeTransfer.Outros)
+    date = models.DateField(default=timezone.now)
+    
+    PaymentMethod = models.IntegerChoices("payment_method", "Credito Débito Dinheiro Pix")
+    payment_method = models.IntegerField(choices=PaymentMethod.choices, default=PaymentMethod.Dinheiro)
+
     card_id = models.ForeignKey(CardModel, on_delete=models.CASCADE, blank=True, null=True, related_name='transfers')
 
     def __str__(self):
-        return f"{self.user_id.username} - {self.value} - {self.type_transfer} - {self.date}"
+        return f"{self.user_id.username} - {self.value} - {self.get_type_transfer_display()} - {self.date}"

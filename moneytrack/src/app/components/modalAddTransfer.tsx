@@ -14,6 +14,14 @@ import { Input, Select } from "./UI/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { PaymentMethodEnum, TypeTransferEnum } from "../enums/TransferEnums";
+import { TransferType } from "../@types/transferType";
+import { parseCookies } from "nookies";
+import { jwtDecode } from "jwt-decode";
+import { toast } from "sonner";
+import { AddTransfer } from "../http/addTransfer";
+import { queryClient } from "../helper/useQuery";
+import { CardType } from "../@types/cardType";
 export const useModelTransition = () => {
   const [isOpen, setIsOpen] = useState(false);
   const open = () => setIsOpen(true);
@@ -21,56 +29,14 @@ export const useModelTransition = () => {
   return { isOpen, open, close };
 };
 
-const data = [
-  {
-    bank: "Banco 1",
-    type: "Cartao 1",
-    bander: "Bander 1",
-    color: "green",
-  },
-  {
-    bank: "Banco 2",
-    type: "Cartao 2",
-    bander: "Bander 2",
-    color: "black",
-  },
-  {
-    bank: "Banco 3",
-    type: "Cartao 3",
-    bander: "Bander 3",
-    color: "orange",
-  },
-  {
-    bank: "Banco 4",
-    type: "Cartao 4",
-    bander: "Bander 4",
-    color: "blueviolet",
-  },
-];
-
-enum typeEnum {
-  Lazer = 1,
-  Alimentação = 2,
-  Transporte = 3,
-  Saúde = 4,
-  Conta = 5,
-  Outros = 6,
-}
-
-enum methoodEnum {
-  credit_Card = 1,
-  Debit_Card = 2,
-  Cash = 3,
-  Transfer = 4,
-  Pix = 5,
-}
-
 const trasnferForm = z.object({
   value: z
     .number({ message: "O valor mínimo é 0" })
     .min(0, { message: "O valor mínimo é 0" }),
-  type: z.nativeEnum(typeEnum, { message: "Selecione pelo menos um tipo" }),
-  methood: z.nativeEnum(methoodEnum, {
+  type: z.nativeEnum(TypeTransferEnum, {
+    message: "Selecione pelo menos um tipo",
+  }),
+  methood: z.nativeEnum(PaymentMethodEnum, {
     message: "Selecione pelo menos um método",
   }),
   data: z.date({ message: "A data deve ser futura" }),
@@ -92,13 +58,52 @@ export const ModalAddTransfer = ({
     handleSubmit,
     formState: { errors },
     reset,
+    setError
   } = useForm<transferFormType>({
     resolver: zodResolver(trasnferForm),
   });
 
+  const data = queryClient.getQueryData(["cards"]);
+
   const handleSubmitForm = (data: transferFormType) => {
-    console.log(data);
-    reset();
+    if (data.methood == PaymentMethodEnum.Credito && data.cartaoId <= 0) {
+      setError("cartaoId", { message: "Selecione um cartão" });
+      return;
+    }
+    const { token } = parseCookies();
+    if (token) {
+      const decode = jwtDecode<{
+        id: string;
+        exp: number;
+      }>(token);
+      const transfer: TransferType = {
+        id: 0,
+        user_id: Number(decode.id),
+        value: data.value,
+        description: data.desc || "",
+        type_transfer: data.type,
+        payment_method: data.methood,
+        card_id: data.cartaoId,
+        date: new Date(data.data),
+      };
+      toast.promise(
+        AddTransfer(transfer, token).then((res) => {
+          if (res) {
+            queryClient.invalidateQueries({ queryKey: ["transferList"] });
+            queryClient.invalidateQueries({ queryKey: ["graphType"] });
+            queryClient.invalidateQueries({ queryKey: ["graphMounth"] });
+
+            reset();
+            close();
+          }
+        }),
+        {
+          loading: "Adicionando transferência",
+          success: "Transferência adicionada com sucesso",
+          error: "Erro ao adicionar transferência",
+        }
+      );
+    }
   };
   return (
     <Dialog
@@ -109,7 +114,7 @@ export const ModalAddTransfer = ({
     >
       <DialogBackdrop
         transition
-        className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
+        className="fixed inset-0 bg-transparent backdrop-blur-md transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
       />
       <div className="fixed inset-0 flex w-screen items-center justify-end p-4 text-green-950">
         <DialogPanel className="max-w-lg w-[400px] h-full space-y-4 border bg-green-200 p-2.5 flex flex-col rounded-md shadow-lg justify-between items-center text-center">
@@ -168,8 +173,8 @@ export const ModalAddTransfer = ({
                     <option value="0">Selecione</option>
                     <option value={1}>Lazer</option>
                     <option value={2}>Alimentação</option>
-                    <option value={3}>Trasnporte</option>
-                    <option value={4}>Saúde</option>
+                    <option value={3}>Saúde</option>
+                    <option value={4}>Trasnporte</option>
                     <option value={5}>Conta</option>
                     <option value={6}>Outro</option>
                   </Select>
@@ -193,8 +198,7 @@ export const ModalAddTransfer = ({
                     <option value={1}>Cartão de Credito</option>
                     <option value={2}>Cartão de Debito</option>
                     <option value={3}>Dinheiro</option>
-                    <option value={4}>Transferência Bancária</option>
-                    <option value={5}>Pix</option>
+                    <option value={4}>Pix</option>
                   </Select>
                 </div>
               </div>
@@ -232,11 +236,15 @@ export const ModalAddTransfer = ({
                     {...register("cartaoId", { valueAsNumber: true })}
                   >
                     <option value="0">Selecione</option>
-                    {data.map((cd, index) => (
-                      <option key={index} value={index}>
-                        {cd.bank} - {cd.type}
-                      </option>
-                    ))}
+                    {data ? (
+                      (data as CardType[]).map((cd, index) => (
+                        <option key={index} value={index}>
+                          {cd.bank} - {cd.type_card}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="0">Nenhum cartão cadastrado</option>
+                    )}
                   </Select>
                 </div>
               </div>
@@ -261,7 +269,12 @@ export const ModalAddTransfer = ({
             </div>
             <div className="w-full p-2 flex flex-row justify-center items-center gap-2.5">
               <PrimaryButton type="submit" width="w-full" content="Adicionar" />
-              <SecundaryButton type="reset" width="w-full" content="Cancelar" onClick={close}/>
+              <SecundaryButton
+                type="reset"
+                width="w-full"
+                content="Cancelar"
+                onClick={close}
+              />
             </div>
           </form>
           <div className="w-full flex  justify-center items-center ">

@@ -8,6 +8,12 @@ import Link from "next/link";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { getlogin } from "../http/login";
+import { LoginType } from "../@types/userType";
+import { AuthContext } from "../action/valid";
+import { useContext } from "react";
+import Loader from "../components/loader";
 const hammersmithOne = Hammersmith_One({
   weight: "400",
   subsets: ["latin"],
@@ -32,14 +38,23 @@ const InputForm = ({ id, type }: { id: string; type: string }) => (
   />
 );
 
-export default function Page() {
+export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, formState } = useForm<LoginForm>({
     resolver: zodResolver(getLogin),
   });
 
-  function handleSubmitForm(data: LoginForm) {
-    console.log("Form submitted with data:", data);
+  const router = useRouter();
+  const { Login } = useContext(AuthContext);
+
+  async function handleSubmitForm(data: LoginForm) {
+    setIsLoading(true);
+    const response = await getlogin(data as LoginType);
+    if (response.access_token) {
+      await Login(response.access_token);
+      router.push("/home");
+    }
   }
 
   return (
@@ -65,7 +80,7 @@ export default function Page() {
             </label>
             <input
               type="text"
-              className="border border-gray-900 bg-zinc-50 rounded-full p-1 w-full mb-4 focus:outline-none focus:ring-2 focus:ring-green-500 drop-shadow-2xl"
+              className="border border-gray-900 bg-zinc-50 rounded-full p-2 w-full mb-4 focus:outline-none focus:ring-2 focus:ring-green-500 drop-shadow-2xl"
               placeholder={`Enter your Username`}
               {...register("username")}
             />
@@ -82,7 +97,7 @@ export default function Page() {
             </label>
             <input
               type={showPassword ? "text" : "password"}
-              className="border border-gray-900 bg-zinc-50 rounded-full p-1 w-full mb-4 focus:outline-none focus:ring-2 focus:ring-green-500 drop-shadow-2xl"
+              className="border border-gray-900 bg-zinc-50 rounded-full p-2 w-full mb-4 focus:outline-none focus:ring-2 focus:ring-green-500 drop-shadow-2xl"
               placeholder={`Enter your Password`}
               {...register("password")}
             />
@@ -103,13 +118,15 @@ export default function Page() {
           <button
             type="submit"
             onClick={handleSubmit(handleSubmitForm)}
-            className="bg-green-500 text-zinc-50 cursor-pointer rounded-full py-1 px-4 w-full hover:bg-green-600 transition duration-300 ease-in-out drop-shadow-2xl"
+            className="bg-green-500 text-zinc-50 cursor-pointer rounded-full py-1 px-4 w-full hover:bg-green-600 transition duration-300 ease-in-out drop-shadow-2xl flex justify-center items-center"
           >
-            Entrar
+            {isLoading ? <Loader /> : <p>Entrar</p>}
           </button>
-          <Link href="/sing-in" className="w-full"><button className="bg-green-50 text-green-500 border-green-500 border-2 cursor-pointer rounded-full py-1 px-4 w-full drop-shadow-2xl">
-            Cadastrar
-          </button></Link>
+          <Link href="/sing-in" className="w-full">
+            <button className="bg-green-50 text-green-500 border-green-500 border-2 cursor-pointer rounded-full py-1 px-4 w-full drop-shadow-2xl">
+              Cadastrar
+            </button>
+          </Link>
         </div>
         <div className="flex flex-col items-center justify-center">
           <p

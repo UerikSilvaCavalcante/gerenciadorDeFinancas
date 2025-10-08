@@ -6,78 +6,120 @@ from user.models import UserModel
 from card.models import CardModel
 from .models import Transfer
 from .schemas import TransferSchema, ResponseTransferSchema, ResponseListTransferSchema
+from user.schemas import MessageSchema
 from typing import List
 from django.shortcuts import get_object_or_404, get_list_or_404
 from django.utils import timezone
 
 
 router = Router()
-@router.get('list/{int:id}', response=List[ResponseListTransferSchema])
+@router.get('list/{int:id}', response={
+    200: List[ResponseListTransferSchema],
+    404: MessageSchema
+})
 def getall_transfers(request, id:int):
     try: 
-        transfers = get_list_or_404(Transfer, user_id=id)
-        for transfer in transfers:
+        g_transfers = get_list_or_404(Transfer, user_id=id)
+        for transfer in g_transfers:
             transfer.date = transfer.date.strftime('%Y-%m-%d %H:%M:%S')
-        d_transfers = [model_to_dict(transfer) for transfer in transfers]
+        d_transfers = []
+        for transfer in g_transfers:
+            t = model_to_dict(transfer, fields=['id', 'value', 'date', 'type_transfer', 'payment_method', 'description','card_id'])
+            
+            t['payment_method'] = transfer.get_payment_method_display();
+            d_transfers.append(t)
+        
+
+
         months = [d_transfers['date'].split('-')[1] for d_transfers in d_transfers]
         months = list(set(months))
+        months.sort(reverse=True)
         d_transfers = [{
             **transfer,
-            'card_id': str(transfers[n].card_id) if transfers[n].card_id else None
+            'card_id': str(g_transfers[n].card_id) if g_transfers[n].card_id else None
         } for n, transfer in enumerate(d_transfers)]
+        reponse = []
         
-        response = [
-            {
-                'month': month,
-                'transfers': [transfer for transfer in d_transfers if transfer['date'].split('-')[1] == month]
-            } for month in months
-        ]
-        return response
+        for month in months:
+            days = [transfer['date'] for transfer in d_transfers if transfer['date'].split('-')[1] == month]
+            days = list(set(days))
+            days.sort(reverse=True)
+            print(days)
+            transfers = []
+            for day in days:
+                transfers.append({
+                    'day': day,
+                    'valueTot': sum(transfer['value'] for transfer in d_transfers if transfer['date'] == day),
+                    'transfers': [{'id': transfer['id'],
+                                'value': transfer['value'], 
+                                'desc': transfer['description'], 
+                                'payment_method': transfer['payment_method'], 
+                                'type_transfer': transfer['type_transfer']} for transfer in d_transfers if transfer['date'] == day]
+                })
+            reponse.append({
+                'mounth': month,     
+                'days': transfers
+            })
+        
+         
+        
+        return reponse
     except Exception as e:
-        raise HttpError(404, f"Transfers not found for user with id {id}. Error: {str(e)}")
+        return 404, {"message": f"Transfers not found for user with id {id}. Error: {str(e)}"}
 
-@router.get('detail/{int:id}', response=ResponseTransferSchema)
+@router.get('detail/{int:id}', response={200: ResponseTransferSchema, 404: MessageSchema})
 def get_transfer(request, id:int):
     try:
         transfer = get_object_or_404(Transfer, id=id)
-        transfer.date = transfer.date.strftime('%Y-%m-%d %H:%M:%S')
+        transfer.date = transfer.date.strftime('%Y-%m-%d')
         d_transfer = model_to_dict(transfer)
+        print(d_transfer)
         d_transfer['card_id'] = str(transfer.card_id) if transfer.card_id else None
-        print(d_transfer['card_id'])
+        
+        d_transfer['payment_method'] = transfer.get_payment_method_display();
         return d_transfer        
     except Transfer.DoesNotExist:
-        raise HttpError(404, f"Transfer with id {id} not found.")
+        return 404, {"message": f"Transfer with id {id} not found."}
 
-@router.post('add/')
+@router.post('add', response={200:bool, 404: MessageSchema, 500: MessageSchema, 400: MessageSchema})
 def add_transfer(request, transfer: TransferSchema):
     try:
         d_transfer = transfer.dict()
         user = UserModel.objects.get(id=d_transfer['user_id'])  
-        user.valorGasto = Decimal(user.valorGasto) + Decimal(d_transfer['value'])
-        card = CardModel.objects.get(id=d_transfer['card_id']) if d_transfer['card_id'] else None   
-        if card:
-            d_transfer['card_id'] = card
+        
+        card = CardModel.objects.get(id=d_transfer['card_id']) if d_transfer['card_id'] else None
+        print(card.type_card)
+        if d_transfer['payment_method'] in [1, 3] and (card.type_card == 2):
+            return 400, {"message": f"Esse Tipo de Cartão não e aceito para o metodo de pagamento"} 
+        if d_transfer['payment_method'] in [2] and (card.type_card == 1):
+            return 400, {"message": f"Esse Tipo de Cartão não e aceito para o metodo de pagamento"} 
+
+        d_transfer['card_id'] = card
         d_transfer['user_id'] = user
         tr = Transfer(**d_transfer)
         tr.save()
         user.save()
         tr.refresh_from_db()
         user.refresh_from_db()
-        return model_to_dict(tr, fields = ['user_id', 'value', 'description', 'type_transfer', 'payment_method', 'date'])
+        return True
     except UserModel.DoesNotExist:
-        raise HttpError(404, f"User with id {d_transfer['user_id']} not found.")
+        return  404, {"message": f"User with id {d_transfer['user_id']} not found."}
     except CardModel.DoesNotExist:
-        raise HttpError(404, f"Card with id {d_transfer['card_id']} not found.")    
+        return  404, {"message": f"Card with id {d_transfer['card_id']} not found."}    
 
-@router.put('{int:id}')
+@router.put('{int:id}', response={200: ResponseTransferSchema, 404: MessageSchema, 500: MessageSchema, 400: MessageSchema})
 def update_transfer(request, id: int, transfer: TransferSchema):
     try:
         db_transfer = get_object_or_404(Transfer, id=id)
         user = UserModel.objects.get(id=transfer.user_id)
-        user.valorGasto  = (Decimal(user.valorGasto) - Decimal(db_transfer.value)) + Decimal(transfer.value)
+        
         d_transfer = transfer.dict()
         if d_transfer['card_id']:
             card = CardModel.objects.get(id=d_transfer['card_id'])
+            if d_transfer['payment_method'] in [1] and (card.type_card != 1 or card.type_card != 3):
+                return 400, {"message": f"Esse Tipo de Cartão não e aceito para o metodo de pagamento"}
+            elif d_transfer['payment_method'] in [2] and card.type_card == 1:
+                return 400, {"message": f"Esse Tipo de Cartão nao e aceito para o metodo de pagamento"}
             d_transfer['card_id'] = card
         else:
             d_transfer['card_id'] = None
@@ -91,14 +133,20 @@ def update_transfer(request, id: int, transfer: TransferSchema):
         db_transfer.save()
         user.save()
         db_transfer.refresh_from_db()
-        return model_to_dict(db_transfer, fields=['id','user_id', 'value', 'description', 'type_transfer', 'payment_method', 'card_id', 'date'])
+        d_transfer = model_to_dict(db_transfer, fields=['id','user_id', 'value', 'description', 'type_transfer', 'payment_method', 'card_id', 'date'])
+        d_transfer['payment_method'] = db_transfer.get_payment_method_display();
+        d_transfer['card_id'] = str(db_transfer.card_id) if db_transfer.card_id else None
+        d_transfer['date'] = db_transfer.date.strftime('%Y-%m-%d')
+        return d_transfer
+    except Transfer.DoesNotExist:
+        return 404, {"message": f"Transfer with id {id} not found."}
     except UserModel.DoesNotExist:
-        raise HttpError(404, f"User with id {d_transfer['user_id']} not found.")
+        return 404, {"message": f"User with id {d_transfer['user_id']} not found."}
     except CardModel.DoesNotExist:
-        raise HttpError(404, f"Card with id {d_transfer['card_id']} not found.")
+        return 404, {"message":f"Card with id {d_transfer['card_id']} not found."}
 
 
-@router.delete('{int:id}')
+@router.delete('{int:id}', response={ 404: MessageSchema})
 def delete_transfer(request, id: int):
     try:
         db_transfer = get_object_or_404(Transfer, id=id)
@@ -107,9 +155,10 @@ def delete_transfer(request, id: int):
         user.save()
         db_transfer.delete()    
         return {"success": True, "message": f"Transfer with id {id} deleted successfully."}
+
     except UserModel.DoesNotExist:
-        raise HttpError(404, f"User with id {db_transfer.user_id.id} not found.")
+        return 404, {"message":f"User with id {db_transfer.user_id.id} not found."}
     except CardModel.DoesNotExist:
-        raise HttpError(404, f"Card with id {db_transfer.card_id.id} not found.")
+        return 404, {"message":f"Card with id {db_transfer.card_id.id} not found."}
 
 

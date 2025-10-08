@@ -8,6 +8,12 @@ import Link from "next/link";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { AddUser, ResponseError } from "../http/addUser";
+import { UserType } from "../@types/userType";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import Loader from "../components/loader";
+import { truncate } from "fs/promises";
 const hammersmithOne = Hammersmith_One({
   weight: "400",
   subsets: ["latin"],
@@ -21,7 +27,7 @@ const getRegister = z.object({
   username: z.string().min(1, "Username is required"),
   password: z.string().min(1, "Password is required"),
   confirmPassword: z.string().min(1, "Confirm Password is required"),
-  email: z.string().email("Invalid email address"),
+  email: z.string().email("Email Invalido"),
 });
 
 type LoginForm = z.infer<typeof getRegister>;
@@ -37,6 +43,7 @@ const InputForm = ({ id, type }: { id: string; type: string }) => (
 export default function Page() {
   const [showPassword, setShowPassword] = useState(false);
   const [validPassword, setValidPassword] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { register, handleSubmit, formState } = useForm<LoginForm>({
     resolver: zodResolver(getRegister),
@@ -50,10 +57,28 @@ export default function Page() {
     setValidPassword(password.value == confirmPassword.value);
   };
 
-  function handleSubmitForm(data: LoginForm) {
-    validPassword
-      ? console.log("Form submitted with data:", data)
-      : console.log("Form submission failed: Passwords do not match");
+  const router = useRouter();
+  async function handleSubmitForm(data: LoginForm) {
+    if (validPassword) {
+      setIsLoading(true);
+      const newUser: UserType = {
+        id: 0,
+        name: data.username,
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      };
+
+      const res = await AddUser(newUser);
+      if (res == true) {
+        router.push("login");
+      } else {
+        setIsLoading(false);
+        toast.error("Erro ao cadastrar\n" + (res as ResponseError).message);
+      }
+    } else {
+      toast.error("Senhas não são iguais");
+    }
   }
 
   return (
@@ -91,7 +116,9 @@ export default function Page() {
             >
               Email{" "}
               {formState.errors.email && (
-                <span className="text-red-500">Campo Obrigatorio</span>
+                <span className="text-red-500">
+                  Campo Obrigatorio {formState.errors.email.message}
+                </span>
               )}
             </label>
             <input
@@ -170,9 +197,15 @@ export default function Page() {
             onClick={handleSubmit(handleSubmitForm)}
             className="bg-green-50 text-green-500 cursor-pointer rounded-full py-1 px-4 w-full hover:bg-green-100  transition duration-300 ease-in-out drop-shadow-2xl"
           >
-            Salvar
+            {isLoading ? (
+             <div className="w-full h-full flex justify-center items-center">
+               <Loader />
+             </div>
+            ) : (
+              <p>Salvar</p>
+            )}
           </button>
-          <Link href="/login" className="w-full "> 
+          <Link href="/login" className="w-full ">
             <button className="bg-green-500 text-green-50 border-green-50 border-2 cursor-pointer rounded-full py-1 px-4 w-full drop-shadow-2xl">
               Entrar
             </button>

@@ -15,7 +15,7 @@ export const NavBar = ({
   isOpen: boolean;
 }) => {
   return (
-    <div className="absolute bottom-3  z-20">
+    <div className="absolute bottom-3  z-10">
       <div className="flex justify-center items-center relative transition-all duration-[450ms] ease-in-out w-auto ">
         <article className="border border-solid border-green-950 w-full ease-in-out duration-500 left-0 rounded-2xl flex shadow-lg shadow-black/15 bg-green-500">
           <Link href="/home" className="cursor-pointer">
