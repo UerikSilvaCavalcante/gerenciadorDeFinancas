@@ -42,7 +42,7 @@ export const ChartMounth = () => {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       {!isLoading ? (
-        data ? (
+        data && data.length > 0 ? (
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
               data={data}

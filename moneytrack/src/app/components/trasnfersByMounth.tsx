@@ -10,6 +10,8 @@ import saude from "../assets/tipos_transfers/saude.svg";
 import transporte from "../assets/tipos_transfers/transporte.svg";
 import outros from "../assets/tipos_transfers/outros.svg";
 
+import { MenuOptions } from "./UI/menuOptions";
+
 dayjs.locale("pt-br");
 
 const types = [lazer, alimentacao, saude, transporte, outros];
@@ -106,13 +108,14 @@ const Trasnsfer = ({
         {methood}
       </h1>
     </div>
-    <div className="w-full h-full px-2 justify-center items-end flex flex-col ">
+    <div className="w-fit h-full px-2 justify-end items-end flex flex-col ">
       <h1
-        className={`${montserrat.className} text-green-800 text-sm text-right font-bold`}
+        className={`${montserrat.className} text-green-800 text-sm text-right text-nowrap font-bold`}
       >
         R$ {Number(value).toFixed(2)}
       </h1>
     </div>
+    
   </div>
 );
 

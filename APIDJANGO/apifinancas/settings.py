@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'card',
     'transfer',
     'dashboard',
+    'verification'
 ]
 
 MIDDLEWARE = [

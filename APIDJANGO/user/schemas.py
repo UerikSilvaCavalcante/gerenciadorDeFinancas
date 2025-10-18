@@ -13,8 +13,7 @@ class ResponseUserSchema(ModelSchema):
         model_fields = ['id', 'name', 'username', 'email', 'valorGasto']
     
 
-class PasswordSchema(Schema):
-    password: str
+
 
 class LoginSchema(Schema):
     username:str

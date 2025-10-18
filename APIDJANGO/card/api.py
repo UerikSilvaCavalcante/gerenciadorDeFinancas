@@ -12,7 +12,7 @@ from user.schemas import MessageSchema
 
 router = Router()
 
-@router.get('list/{int:id}', response=List[ResponseCardSchema])
+@router.get('list/{int:id}', response={200: List[ResponseCardSchema], 404: MessageSchema})
 def get_all_cards(request, id: int):
     try:
         cards = get_list_or_404(CardModel, user_id=id)

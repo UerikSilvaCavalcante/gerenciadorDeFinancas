@@ -12,10 +12,13 @@ class ResponseTransferSchema(Schema):
     id:int
     value:Decimal
     date:str
-    description:str
+    description:str 
     type_transfer:int
     payment_method:str
-    card_id:str | None = None
+    payment_method_id:int
+    card_id: int | None = None
+    card: str | None = None
+
 
 from typing import List, Dict
 
@@ -35,3 +38,8 @@ class TransferDaySchema(Schema):
 class ResponseListTransferSchema(Schema):
     mounth: str
     days: List[TransferDaySchema]
+
+class ResponseListStatic(ModelSchema):
+    class Config:
+        model = Transfer
+        model_fields = ['id']

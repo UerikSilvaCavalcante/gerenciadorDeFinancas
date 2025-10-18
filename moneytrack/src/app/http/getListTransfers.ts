@@ -13,6 +13,9 @@ export async function getListTransfers(
       },
     }
   );
-  const data: TransferMounthType[] = await response.json();
-  return data
+  if (response.ok) {
+    const data: TransferMounthType[] = await response.json();
+    return data;
+  }
+  return []
 }

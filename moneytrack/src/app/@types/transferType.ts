@@ -16,7 +16,9 @@ export type RespnseTransferType = {
   description: string;
   type_transfer: number;
   payment_method: string;
-  card_id: string | null;
+  payment_method_id: number;
+  card_id: number | null;
+  card: string | null;
 };
 
 export type TransferListItemType = {

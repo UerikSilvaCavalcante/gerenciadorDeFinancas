@@ -11,7 +11,7 @@ import React, { Component } from "react";
 import Slider, { Settings } from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { dataProps, RowProps } from "../transfers/page";
+import {RowProps } from "../transfers/page";
 import {
   TransferDay,
   TransferMounth,
@@ -112,8 +112,8 @@ export default function Home() {
   return (
     <MainLayout title="Home">
       <ModalAddCard isOpen={isOpen} close={close} />
-      <div className="flex flex-col w-[80vw] h-full  justify-center items-center gap-2.5 bg-transparent">
-        <div className="w-full h-full flex flex-row justify-around gap-4 rounded-md items-center bg-transparent p-2.5 ">
+      <div className="flex flex-col w-[80vw] h-full  justify-center items-center bg-transparent">
+        <div className="w-full h-full flex flex-row justify-around gap-4 rounded-md items-center bg-transparent p-2 ">
           <div className="w-full flex flex-row justify-around h-full p-1.5 gap-2 bg-green-200 drop-shadow-2xl shadow-2xl  ">
             <div className="w-1/2 h-full flex flex-col justify-center items-center bg-green-100 p-0.5 rounded-md">
               <h1
@@ -133,7 +133,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="w-full h-full flex flex-row justify-around gap-6 rounded-md items-center bg-transparent p-2.5 ">
+        <div className="w-full h-full flex flex-row justify-around gap-2.5 rounded-md items-center bg-transparent p-2.5 ">
           <div className="flex flex-col w-1/2 h-full gap-6 bg-green-200 drop-shadow-2xl shadow-2xl rounded-md">
             <div className="w-full  p-3 flex flex-row ">
               <h1
@@ -180,7 +180,7 @@ export default function Home() {
               )}
             </div>
           </div>
-          <div className="w-1/2 h-full flex flex-col justify-center items-center  gap-6 bg-green-200 drop-shadow-2xl shadow-2xl rounded-md ">
+          <div className="w-[60%] h-full flex flex-col justify-center items-center  gap-6 bg-green-200 drop-shadow-2xl shadow-2xl rounded-md ">
             <h1
               className={`${hammersmithOne.className} text-green-900 text-2xl text-center w-full p-0.5`}
             >
@@ -191,7 +191,7 @@ export default function Home() {
                 <div className="w-full h-full flex items-center justify-center">
                   <Loader />
                 </div>
-              ) : filteredData ? (
+              ) : filteredData && filteredData.length > 0 ? (
                 <List
                   rowComponent={Row}
                   rowHeight={rowHeight}

@@ -72,6 +72,8 @@ div::-webkit-scrollbar-thumb {
   transition: transform 0.2s ease;
 }
 
+
+
 .trash-svg {
   width: 35px;
   height: 35px;
@@ -108,4 +110,17 @@ div::-webkit-scrollbar-thumb {
 
 .limit-bar {
 animation: load 2s ease-in-out  ;
+}
+
+@keyframes surge {
+  from {
+    width: 0;
+  }
+  to {
+    width: fit-content;
+  }
+}
+
+.suger-opt {
+  animation: surge 2s ease-in-out  ;
 }

@@ -21,6 +21,7 @@ import { parseCookies } from "nookies";
 import { getListTransfers } from "../http/getListTransfers";
 import Loader from "../components/loader";
 import { jwtDecode } from "jwt-decode";
+import { MenuOptions } from "../components/UI/menuOptions";
 
 export const trasnferFilter = z.object({
   min: z.number().min(0, { message: "O valor mínimo é 0" }).optional(),
@@ -32,19 +33,7 @@ export const trasnferFilter = z.object({
 
 export type trasnferFilterForm = z.infer<typeof trasnferFilter>;
 
-export type dataProps = {
-  mounth: number;
-  trasnsfers: {
-    day: string;
-    valueTot: number;
-    trasnfer: {
-      desc: string;
-      methood: string;
-      type: number;
-      value: number;
-    }[];
-  }[];
-};
+
 
 export const Row = ({
   index,
@@ -65,13 +54,16 @@ export const Row = ({
           >
             <TransferDay date={day.day} valueTot={day.valueTot} />
             {day.transfers.map((transfer, index) => (
-              <Trasnsfer
-                key={index}
+              <div className="w-full h-[60px] flex justify-items-center " key={index}>
+                <Trasnsfer
+                
                 value={transfer.value}
                 desc={transfer.desc ? transfer.desc : ""}
                 methood={transfer.payment_method}
                 type={transfer.type_transfer}
               />
+              <MenuOptions id={transfer.id} />
+              </div>
             ))}
           </div>
         ))}
@@ -188,7 +180,7 @@ export default function Transfer() {
                 <Loader />
               </div>
             ) : (
-              filteredData ? (
+              filteredData && filteredData.length > 0 ? (
                 <List
                   rowComponent={Row}
                   rowCount={filteredData.length}

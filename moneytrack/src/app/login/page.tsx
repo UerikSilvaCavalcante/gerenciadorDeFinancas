@@ -41,9 +41,10 @@ const InputForm = ({ id, type }: { id: string; type: string }) => (
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [messageError, setMessageError] = useState("");
   const { register, handleSubmit, formState } = useForm<LoginForm>({
     resolver: zodResolver(getLogin),
-  });
+  }); 
 
   const router = useRouter();
   const { Login } = useContext(AuthContext);
@@ -54,7 +55,9 @@ export default function Login() {
     if (response.access_token) {
       await Login(response.access_token);
       router.push("/home");
+      return;
     }
+    setMessageError("Usuário ou senha inválidos");
   }
 
   return (
@@ -115,6 +118,7 @@ export default function Login() {
           </div>
         </form>
         <div className="flex gap-7 flex-col w-full justify-center items-center  p-3.5">
+          {messageError && <p className="text-red-500 text-sm">{messageError}</p>}
           <button
             type="submit"
             onClick={handleSubmit(handleSubmitForm)}
@@ -132,7 +136,7 @@ export default function Login() {
           <p
             className={`${montserrat.className} text-sm text-center text-green-700 underline mt-4`}
           >
-            <Link href="#">Esqueci minha senha</Link>
+            <Link href="/recoveryPass">Esqueci minha senha</Link>
           </p>
         </div>
       </div>

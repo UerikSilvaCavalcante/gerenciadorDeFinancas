@@ -26,12 +26,10 @@ import { EditCard } from "../http/editCard";
 import { queryClient } from "../helper/useQuery";
 import { Trash } from "./UI/trash";
 import { ModalDelete, useModelTransition } from "./modalDelete";
+import DeleteCard from "../http/deleteCard";
+import { useRouter } from "next/navigation";
 
-export const Row = ({
-  index,
-  style,
-  filteredData,
-}: RowComponentProps<RowProps>) => {
+const Row = ({ index, style, filteredData }: RowComponentProps<RowProps>) => {
   return (
     <div
       className="w-full h-full flex flex-row justify-start items-start"
@@ -61,20 +59,24 @@ export const Row = ({
   );
 };
 
-export const rowHeight = (index: number, { filteredData }: RowProps) => {
+const rowHeight = (index: number, { filteredData }: RowProps) => {
   const trasnfer = filteredData[index].days;
   const trasnferHeight = trasnfer.length;
   const day = trasnfer.flatMap((d) => d.transfers);
   const dayHeight = day.length;
-  return 32 + (trasnferHeight * 32 )+ (dayHeight * 60);
+  return 32 + trasnferHeight * 32 + dayHeight * 60;
 };
 
-export function RenderCardDetail({ card , token}: { card: CardDetailType, token:string }) {
+export function RenderCardDetail({
+  card,
+  token,
+}: {
+  card: CardDetailType;
+  token: string;
+}) {
   const [filteredData, setFilteredData] = useState<TransferMounthType[] | null>(
     card.transfers
   );
-
-  
 
   useEffect(() => {
     if (card) {
@@ -100,7 +102,7 @@ export function RenderCardDetail({ card , token}: { card: CardDetailType, token:
     handleSubmit: handleSubmitCard,
     formState: { errors: errorsCard },
     setError,
-    reset: resetCard
+    reset: resetCard,
   } = useForm<CardFormsType>({
     resolver: zodResolver(CardForm),
     defaultValues: cardF,
@@ -124,25 +126,28 @@ export function RenderCardDetail({ card , token}: { card: CardDetailType, token:
       return;
     }
 
-    const cardPut:CardType = {
+    const cardPut: CardType = {
       id: card.card.id,
       user_id: card.card.user,
       bank: data.bank,
       type_card: data.type,
       bander: data.brand,
       limit: data.limit ?? 0,
-      color: data.color
-    }
-    toast.promise(EditCard(cardPut, token).then((res) => {
-      if((res as ResponseCardType).id){
-        queryClient.invalidateQueries({ queryKey: ["cards"] });
-        window.location.reload();
+      color: data.color,
+    };
+    toast.promise(
+      EditCard(cardPut, token).then((res) => {
+        if ((res as ResponseCardType).id) {
+          queryClient.invalidateQueries({ queryKey: ["cards"] });
+          window.location.reload();
+        }
+      }),
+      {
+        loading: "Editando cartão",
+        success: "Cartão editado com sucesso",
+        error: "Erro ao editar cartão",
       }
-    }), {
-      loading: "Editando cartão",
-      success: "Cartão editado com sucesso",
-      error: "Erro ao editar cartão"
-    })    
+    );
   };
 
   const utilitedLimit = (card.limit / card.card.limit) * 100;
@@ -150,68 +155,85 @@ export function RenderCardDetail({ card , token}: { card: CardDetailType, token:
     if (filteredData) {
       let filtered = filteredData;
 
-      filtered = filteredData?.map((item) => {
-        const trasnfers = item.days
-          .map((day) => {
-            const filteredTransfers = day.transfers.filter((transfer) => {
-              // sem filtro de tipo -> aceita todos
-              if (!filterForm.type || filterForm.type.length <= 0) {
-                return true;
-              }
+      filtered = filteredData
+        ?.map((item) => {
+          const trasnfers = item.days
+            .map((day) => {
+              const filteredTransfers = day.transfers.filter((transfer) => {
+                // sem filtro de tipo -> aceita todos
+                if (!filterForm.type || filterForm.type.length <= 0) {
+                  return true;
+                }
 
-              const allowed = filterForm.type
-                ? new Set(filterForm.type.map(Number))
-                : null;
-              return allowed?.has(Number(transfer.type_transfer));
+                const allowed = filterForm.type
+                  ? new Set(filterForm.type.map(Number))
+                  : null;
+                return allowed?.has(Number(transfer.type_transfer));
+              });
+              const newValueTot = filteredTransfers.reduce(
+                (s, t) => Number(s) + (Number(t.value) ?? 0),
+                0
+              );
+              return {
+                ...day,
+                valueTot: newValueTot,
+                transfers: filteredTransfers,
+              };
+            })
+            .filter((day) => day.transfers && day.transfers.length > 0)
+            .filter((day) => {
+              const minOk =
+                filterForm.min == undefined ||
+                Number(day.valueTot) >= filterForm.min;
+              const maxOk =
+                filterForm.max == undefined ||
+                Number(day.valueTot) <= filterForm.max;
+              return minOk && maxOk;
+            })
+            .filter((day) => day.transfers && day.transfers.length > 0)
+            .filter((day) => {
+              const minDate =
+                filterForm.de == null ||
+                new Date(day.day) >= new Date(filterForm.de);
+              const maxDate =
+                filterForm.ate == null ||
+                new Date(day.day) <= new Date(filterForm.ate);
+              return minDate && maxDate;
             });
-            const newValueTot = filteredTransfers.reduce(
-              (s, t) => Number(s) + (Number(t.value) ?? 0),
-              0
-            );
-            return {
-              ...day,
-              valueTot: newValueTot,
-              transfers: filteredTransfers,
-            };
-          })
-          .filter((day) => day.transfers && day.transfers.length > 0)
-          .filter((day) => {
-            const minOk =
-              filterForm.min == undefined ||
-              Number(day.valueTot) >= filterForm.min;
-            const maxOk =
-              filterForm.max == undefined ||
-              Number(day.valueTot) <= filterForm.max;
-            return minOk && maxOk;
-          })
-          .filter((day) => day.transfers && day.transfers.length > 0)
-          .filter((day) => {
-            const minDate =
-              filterForm.de == null ||
-              new Date(day.day) >= new Date(filterForm.de);
-            const maxDate =
-              filterForm.ate == null ||
-              new Date(day.day) <= new Date(filterForm.ate);
-            return minDate && maxDate;
-          });
 
-        return {
-          ...item,
-          days: trasnfers,
-        };
-      }).filter((item) => item.days && item.days.length > 0);
-      
+          return {
+            ...item,
+            days: trasnfers,
+          };
+        })
+        .filter((item) => item.days && item.days.length > 0);
 
       setFilteredData(filtered);
     }
   };
-  const {isOpen,open,close} = useModelTransition();
-  
+  const { isOpen, open, close } = useModelTransition();
+  const router = useRouter();
+  const handleDelete = async () => {
+    const res = await DeleteCard(card.card.id, token);
+    if (res.success) {
+      close();
+      toast.success("Cartão excluido com sucesso");
+      queryClient.invalidateQueries({ queryKey: ["cards"] });
+      router.push("/home");
+      return;
+    }
+    toast.error(`Erro ao excluir cartão ${res.message}`);
+    return;
+  };
   return (
     <MainLayout title="Card Transfer">
-      <ModalDelete close={close} isOpen={isOpen} id={card.card.id} token={token}/>
+      <ModalDelete
+        close={close}
+        isOpen={isOpen}
+        handleDelete={handleDelete}
+      />
       <div className="flex flex-row h-full w-[60vw] gap-2.5 p-2.5 ">
-        <div className=" h-full w-full flex flex-col justify-center items-center p-2 bg-green-100 gap-2.5 relative" >
+        <div className=" h-full w-full flex flex-col justify-center items-center p-2 bg-green-100 gap-2.5 relative">
           <div className="w-full h-[30%] flex justify-center items-center ">
             <CardComponent
               id={card.card.id}
@@ -220,8 +242,11 @@ export function RenderCardDetail({ card , token}: { card: CardDetailType, token:
               bander={card.card.bander}
               color={card.card.color}
             />
-            <div className="absolute top-2 right-2 cursor-pointer" onClick={open}>
-              <Trash/>
+            <div
+              className="absolute top-2 right-2 cursor-pointer"
+              onClick={open}
+            >
+              <Trash />
             </div>
           </div>
           <h1
@@ -230,13 +255,14 @@ export function RenderCardDetail({ card , token}: { card: CardDetailType, token:
             Limite disponivel do Cartão
           </h1>
           <div className="w-full flex justify-center items-center gap-1 relative">
+            <div className={`w-full h-[10px] bg-green-200 rounded-full`}></div>
             <div
-              className={`w-full h-[10px] bg-green-200 rounded-full`}
+              className={`h-[10px] bg-green-900 rounded-full absolute left-0 limit-bar`}
+              style={{ width: `${utilitedLimit}%` }}
             ></div>
-          <div className={`h-[10px] bg-green-900 rounded-full absolute left-0 limit-bar`} style={{width: `${utilitedLimit}%`}}>
-              
-            </div>
-            <p className={`${montserrat.className} text-green-900 text-sm text-right`}>
+            <p
+              className={`${montserrat.className} text-green-900 text-sm text-right`}
+            >
               R${card.card.limit - card.limit}
             </p>
           </div>
@@ -382,7 +408,12 @@ export function RenderCardDetail({ card , token}: { card: CardDetailType, token:
 
             <div className="w-full p-2 flex flex-row justify-center items-center gap-2.5">
               <PrimaryButton type="submit" width="w-full" content="Salvar" />
-              <SecundaryButton type="button" width="w-full" content="Cancelar" onClick={() => resetCard()}/>
+              <SecundaryButton
+                type="button"
+                width="w-full"
+                content="Cancelar"
+                onClick={() => resetCard()}
+              />
             </div>
           </form>
           <form

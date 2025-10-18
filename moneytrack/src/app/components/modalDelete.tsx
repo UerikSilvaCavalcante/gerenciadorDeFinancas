@@ -22,30 +22,15 @@ export const useModelTransition = () => {
 };
 
 export const ModalDelete = ({
-  id,
-  token,
   isOpen,
   close,
+  handleDelete
 }: {
-  id: number;
-  token:string;
   isOpen: boolean;
   close: () => void;
+  handleDelete: () => void;
 }) => {
-
-  const router = useRouter();
-  const handleDelete = async () => {
-    const res = await DeleteCard(id, token);
-    if (res.success) {
-      close();
-      toast.success("Cartão excluido com sucesso");
-      router.push("/home");
-      return ;
-    }
-    toast.error(`Erro ao excluir cartão ${res.message}`);
-    return ;
-
-  }
+  
   return (
     <Dialog
       open={isOpen}
