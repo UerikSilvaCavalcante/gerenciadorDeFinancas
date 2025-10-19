@@ -17,6 +17,7 @@ import { RespnseTransferType } from "../@types/transferType";
 import { useQuery } from "@tanstack/react-query";
 import { GetCartoes } from "../http/getCartões";
 import { useEffect } from "react";
+import editTransfer from "../http/editTransfer";
 
 const trasnferForm = z.object({
   value: z
@@ -36,10 +37,10 @@ const trasnferForm = z.object({
 type transferFormType = z.infer<typeof trasnferForm>;
 
 export const FormTrasnfer = ({
-  transfer,
+  storedTransfer,
   close,
 }: {
-  transfer?: RespnseTransferType;
+  storedTransfer?: RespnseTransferType;
   close?: () => void;
 }) => {
   const { token } = parseCookies();
@@ -67,23 +68,27 @@ export const FormTrasnfer = ({
   } = useForm<transferFormType>({
     resolver: zodResolver(trasnferForm),
     defaultValues: {
-      value: transfer?.value || 0,
-      type: transfer?.type_transfer || 0,
-      methood: transfer?.payment_method_id || 0,
-      data: (transfer?.date as unknown as Date) || new Date(),
-      cartao_id: transfer?.card_id || 0,
-      desc: transfer?.description || "",
+      value: storedTransfer?.value || 0,
+      type: storedTransfer?.type_transfer || 0,
+      methood: storedTransfer?.payment_method || 0,
+      data: (storedTransfer?.date as unknown as Date) || new Date(),
+      cartao_id: storedTransfer?.card_id || 0,
+      desc: storedTransfer?.description || "",
     },
   });
 
   useEffect(() => {
     if (data != undefined) {
-      reset()
+      reset();
     }
-  }, [data])
+  }, [data]);
 
   const handleSubmitForm = (data: transferFormType) => {
-    if (data.methood == PaymentMethodEnum.Credito && data.cartao_id) {
+    if (
+      (data.methood == PaymentMethodEnum.Credito ||
+        data.methood == PaymentMethodEnum.Debito) &&
+      !data.cartao_id
+    ) {
       setError("cartao_id", { message: "Selecione um cartão" });
       return;
     }
@@ -103,25 +108,64 @@ export const FormTrasnfer = ({
         card_id: data.cartao_id,
         date: new Date(data.data),
       };
-      toast.promise(
-        AddTransfer(transfer, token).then((res) => {
-          if (res) {
-            queryClient.invalidateQueries({ queryKey: ["transferList"] });
-            queryClient.invalidateQueries({ queryKey: ["graphType"] });
-            queryClient.invalidateQueries({ queryKey: ["graphMounth"] });
-
-            reset();
-            if (close) {
-              close();
+      if (storedTransfer) {
+        toast.promise(
+          editTransfer(storedTransfer.id, token, transfer).then((res) => {
+            if (res.success) {
+              queryClient.invalidateQueries({ queryKey: ["transfers"] });
+              queryClient.invalidateQueries({ queryKey: ["graphType"] });
+              queryClient.invalidateQueries({ queryKey: ["graphMounth"] });
+              reset();
+              if (close) {
+                close();
+              }
             }
+            return res;
+          }),
+          {
+            loading: "Editando transferência..",
+            success: (data) => {
+              if (data) {
+                return data.message;
+              }
+            },
+            error: (data) => {
+              return data.message;
+            },
           }
-        }),
-        {
-          loading: "Adicionando transferência",
-          success: "Transferência adicionada com sucesso",
-          error: "Erro ao adicionar transferência",
-        }
-      );
+        );
+      } else {
+        toast.promise(
+          AddTransfer(transfer, token)
+            .then((res) => {
+              if (res.success) {
+                queryClient.invalidateQueries({ queryKey: ["transfers"] });
+                queryClient.invalidateQueries({ queryKey: ["graphType"] });
+                queryClient.invalidateQueries({ queryKey: ["graphMounth"] });
+                reset();
+                if (close) {
+                  close();
+                }
+              }
+              return res;
+            })
+            .catch((res) => {
+              return res;
+            }),
+
+          {
+            loading: "Adicionando transferência..",
+            success: (data) => {
+              if (data) {
+                return data.message;
+              }
+            },
+            error: (data) => {
+              return data.message;
+            },
+          }
+        );
+      }
     }
   };
 
@@ -268,10 +312,15 @@ export const FormTrasnfer = ({
       <div className="w-full p-2 flex flex-row justify-center items-center gap-2.5">
         <PrimaryButton type="submit" width="w-full" content="Salvar" />
         <SecundaryButton
-          type="reset"
+          type="button"
           width="w-full"
           content="Cancelar"
-          onClick={close}
+          onClick={() => {
+            if (close) {
+              close();
+            }
+            reset();
+          }}
         />
       </div>
     </form>

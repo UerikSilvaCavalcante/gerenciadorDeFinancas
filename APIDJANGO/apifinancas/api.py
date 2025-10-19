@@ -58,7 +58,7 @@ def loginUser(request, l: LoginSchema):
 
 
 @public_router.post(
-    "add/", response={200: ResponseUserSchema, 400: MessageSchema, 500: MessageSchema}
+    "add/", response={201: ResponseUserSchema, 400: MessageSchema, 500: MessageSchema}
 )
 def postUser(request, u: UserSchema):
     try:
@@ -70,7 +70,7 @@ def postUser(request, u: UserSchema):
             newUser = UserModel(**nu)
             newUser.encrypassword()
             newUser.save()
-            return 200, model_to_dict(
+            return 201, model_to_dict(
                 newUser, fields=["id", "name", "username", "email", "valorGasto"]
             )
     except Exception as ex:

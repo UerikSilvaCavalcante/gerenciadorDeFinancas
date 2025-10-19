@@ -36,9 +36,10 @@ export default function Home() {
     infinite: true,
     speed: 500,
     slidesToShow: 1,
-
+    centerPadding: "0px",
     slidesToScroll: 1,
     centerMode: true,
+    className:"center"
   };
   const Row = ({ index, style, filteredData }: RowComponentProps<RowProps>) => {
     return (
@@ -112,10 +113,10 @@ export default function Home() {
   return (
     <MainLayout title="Home">
       <ModalAddCard isOpen={isOpen} close={close} />
-      <div className="flex flex-col w-[80vw] h-full  justify-center items-center bg-transparent">
-        <div className="w-full h-full flex flex-row justify-around gap-4 rounded-md items-center bg-transparent p-2 ">
-          <div className="w-full flex flex-row justify-around h-full p-1.5 gap-2 bg-green-200 drop-shadow-2xl shadow-2xl  ">
-            <div className="w-1/2 h-full flex flex-col justify-center items-center bg-green-100 p-0.5 rounded-md">
+      <div className="flex flex-col w-[90vw] h-full  justify-center items-center bg-transparent">
+        <div className="w-full lg:h-[60%] flex lg:flex-row justify-around gap-4 rounded-md items-center bg-transparent p-2 ">
+          <div className="w-full h-[700px] flex flex-col lg:flex-row justify-around lg:h-full p-1.5 gap-2 bg-green-200 drop-shadow-2xl shadow-2xl  ">
+            <div className="lg:w-1/2 w-full h-full flex flex-col justify-center items-center bg-green-100 p-0.5 rounded-md">
               <h1
                 className={`${hammersmithOne.className} text-green-900 text-lg text-center w-full border-b border-green-900`}
               >
@@ -123,7 +124,7 @@ export default function Home() {
               </h1>
               <ChartMounth />
             </div>
-            <div className="w-1/2 h-full flex flex-col justify-center items-center bg-green-100 p-0.5 rounded-md">
+            <div className="lg:w-1/2 w-full h-full flex flex-col justify-center items-center bg-green-100 p-0.5 rounded-md">
               <h1
                 className={`${hammersmithOne.className} text-green-900 text-lg text-center w-full border-b border-green-900`}
               >
@@ -133,8 +134,8 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="w-full h-full flex flex-row justify-around gap-2.5 rounded-md items-center bg-transparent p-2.5 ">
-          <div className="flex flex-col w-1/2 h-full gap-6 bg-green-200 drop-shadow-2xl shadow-2xl rounded-md">
+        <div className="w-full h-[40%]  flex flex-col lg:flex-row justify-around gap-2.5 rounded-md items-center bg-transparent p-2.5 ">
+          <div className="flex flex-col w-full lg:w-[40%] h-full gap-6 bg-green-200 drop-shadow-2xl shadow-2xl rounded-md">
             <div className="w-full  p-3 flex flex-row ">
               <h1
                 className={`${hammersmithOne.className} text-green-900 text-2xl text-center w-full`}
@@ -143,15 +144,16 @@ export default function Home() {
               </h1>
 
               <Image
-                src={plus}
+                src={plus}  
                 width={24}
                 height={24}
-                alt="person"
+                alt="plus"
                 className="cursor-pointer"
                 onClick={open}
+                title="Adicionar Cartão"
               />
             </div>
-            <div className="w-full h-full p-3 flex flex-row border-b-2 border-t-2 border-green-800">
+            <div className="w-full h-full p-3 flex flex-row border-b-2 border-t-2 border-green-800 justify-center items-center">
               {isLoadingCard ? (
                 <div className="w-full h-full  flex flex-col justify-center items-center ">
                   <Loader />
@@ -180,13 +182,13 @@ export default function Home() {
               )}
             </div>
           </div>
-          <div className="w-[60%] h-full flex flex-col justify-center items-center  gap-6 bg-green-200 drop-shadow-2xl shadow-2xl rounded-md ">
+          <div className="lg:w-[60%] w-full h-full flex flex-col justify-between items-center   bg-green-200 drop-shadow-2xl shadow-2xl rounded-md relative">
             <h1
               className={`${hammersmithOne.className} text-green-900 text-2xl text-center w-full p-0.5`}
             >
               Ultimas Trasnferencias
             </h1>
-            <div className="h-full w-full max-h-[160px] border-t-2 border-green-900">
+            <div className="w-full lg:h-full h-[160px] max-h-[25vh] relative border-t-2 border-green-900">
               {isLoading ? (
                 <div className="w-full h-full flex items-center justify-center">
                   <Loader />

@@ -6,6 +6,7 @@ export const Trash = () => {
         viewBox="0 -10 64 74"
         xmlns="http://www.w3.org/2000/svg"
       >
+        <title>{"Excluir"}</title>
         <g id="trash-can">
           <rect
             x="16"

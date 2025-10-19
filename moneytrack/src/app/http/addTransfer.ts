@@ -1,10 +1,14 @@
-import { id } from "zod/locales";
 import { TransferType } from "../@types/transferType";
+
+interface ResponseProps {
+  success: boolean;
+  message: string;
+}
 
 export async function AddTransfer(
   transfer: TransferType,
   token: string
-): Promise<boolean | null> {
+): Promise<ResponseProps> {
   const reponse = await fetch("http://127.0.0.1:8000/api/transfer/add", {
     method: "POST",
     headers: {
@@ -22,8 +26,12 @@ export async function AddTransfer(
     }),
   });
 
+  const data = await reponse.json();
   if (reponse.ok) {
-    return await reponse.json();
+    return {
+      success: true,
+      message: "Transferência adicionada com sucesso",
+    };
   }
-  return null;
+  throw new Error(data.message);
 }

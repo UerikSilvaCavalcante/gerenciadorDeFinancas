@@ -21,11 +21,11 @@ def get_all_cards(request, id: int):
             d = model_to_dict(card, fields=['id', 'user',  'bander', 'bank', 'type_card', 'color', 'limit'])
             d['type_card'] = card.get_type_card_display()
             response.append(d)
-        return response
+        return 200, response
     except Exception as e:
         return  404, {"message": f"Cards not found for user with id {id}. Error: {str(e)}"}
 
-@router.get('detail/{int:id}', response={200: ResponseDetailSchema, 404: MessageSchema})
+@router.get('detail/{int:id}', response={200: ResponseDetailSchema, 404: MessageSchema, 500: MessageSchema})
 def get_card(request, id: int):
     try:
         card = get_object_or_404(CardModel, id = id)
@@ -76,27 +76,31 @@ def get_card(request, id: int):
         d_card['type_card'] = card.get_type_card_display()
         
         return {"card":d_card, "transfers": reponse, "total_value": value_tot, "limit": limit}
-    except Exception as e:
-        return 404, {"message" : f"Transfers not found for card with id {id}. Error: {str(e)}"}
     except CardModel.DoesNotExist:
-        return 404, {"message": f"Card with id {id} not found."}
+        return 404, {"message": f"Cartão não encontrado."}
+    except Exception as e:
+        return 500, {"message" : f"Erro ao buscar gastos: {e}"}
 
-@router.post('add', response=bool)
+@router.post('add', response={201: MessageSchema, 404: MessageSchema, 400: MessageSchema,500: MessageSchema})
 def add_card(request, card: CardSchema):
     try:
         d_card = card.dict()
+        if d_card['type_card'] == [1,3] and d_card['limit'] == None:
+            return 400, {"message": "Cartão de credito precisa de um limite."}
+        if d_card['type_card'] == [2] and d_card['limit'] != None:
+            return 400, {"message": "Cartão de debito não aceita um limite."}
         user = UserModel.objects.get(id=d_card['user'])
         d_card['user'] = user
         new_card = CardModel(**d_card)
         new_card.save()
         new_card.refresh_from_db()
-        return True
+        return 201, {"message": "Cartão adicionado com sucesso."}
     except UserModel.DoesNotExist:
-        return  404, {"message": f"User with id {d_card['user']} not found."}
+        return  404, {"message": f"Usuario com id {d_card['user']} não encontrado."}
     except Exception as e:
-        return  400, {"message": f"Error adding card: {e}"}
+        return  500, {"message": f"Erro ao adicionar cartão: {e}"}
 
-@router.put('{int:id}', response={200: ResponseCardSchema, 404: MessageSchema, 400: MessageSchema})
+@router.put('{int:id}', response={206: MessageSchema, 404: MessageSchema, 400: MessageSchema})
 def update_card(request, id: int, card: CardSchema):
     try:
         db_card = get_object_or_404(CardModel, id=id)
@@ -107,22 +111,20 @@ def update_card(request, id: int, card: CardSchema):
             setattr(db_card, attr, value)       
         db_card.save()
         db_card.refresh_from_db()
-        dbd_card = model_to_dict(db_card)
-        dbd_card['type_card'] = db_card.get_type_card_display()
-        return dbd_card
+        return 206, {"message": f"Cartão atualizado com sucesso."}
     except CardModel.DoesNotExist:
-        return 404, {"message": f"Card with id {id} not found."}
+        return 404, {"message": f"Cartão não encontrado."}
     except Exception as e:
-        return 400, {"message": f"Error updating card: {str(e)}"}
+        return 500, {"message": f"Erro ao atualizar cartão: {str(e)}"}
 
 
-@router.delete('{int:id}')
+@router.delete('{int:id}', response={204: MessageSchema, 404: MessageSchema, 500: MessageSchema})
 def delete_card(request, id: int):
     try:
         card = get_object_or_404(CardModel, id=id)
         card.delete()
-        return {"success": True, "message": f"Card with id {id} deleted successfully."}
+        return 204, {"message": f"Cartão deletado com sucesso."}
     except CardModel.DoesNotExist:
-        return 404, {"success": False, "message":f"Card with id {id} not found."}
+        return 404, {"message": f"Cartão nao encontrado."}
     except Exception as e:
-        return 400, {"success": False,"message":f"Error deleting card: {str(e)}"}
+        return 500, {"message": f"Erro ao deletar cartão: {str(e)}"}

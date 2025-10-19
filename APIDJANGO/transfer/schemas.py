@@ -14,10 +14,8 @@ class ResponseTransferSchema(Schema):
     date:str
     description:str 
     type_transfer:int
-    payment_method:str
-    payment_method_id:int
+    payment_method:int
     card_id: int | None = None
-    card: str | None = None
 
 
 from typing import List, Dict

@@ -1,33 +1,19 @@
 from decimal import Decimal
-import hashlib
 from django.forms import model_to_dict
 import jwt
-from ninja import Router, ModelSchema, Schema
+from ninja import Router
 
 from transfer.models import Transfer
 from .models import UserModel
-from ninja.errors import HttpError
 from django.shortcuts import get_object_or_404, get_list_or_404
 from .schemas import (
-    LoginSchema,
     UserSchema,
     ResponseUserSchema,
-    TokenSchema,
     MessageSchema,
 )
 from typing import List
 from datetime import datetime, timedelta
 from django.conf import settings
-import pandas as pd
-import string
-import secrets
-from django_redis import get_redis_connection
-import smtplib
-import email.message
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from email.mime.base import MIMEBase
-from decouple import config
 
 router = Router()
 
@@ -39,14 +25,18 @@ def getUser(request):
     return d_users
 
 
-@router.get("{int:id}", response=ResponseUserSchema)
+@router.get("{int:id}", response={200: ResponseUserSchema, 404: MessageSchema, 500: MessageSchema})
 def getUserById(request, id: int):
-    user = get_object_or_404(UserModel, id=id)
-    transfers = Transfer.objects.filter(user_id=id, date__month=datetime.now().month)
-    valorTot = sum(Decimal(transfer.value) for transfer in transfers)
-    user.valorGasto = valorTot
-    return model_to_dict(user)
-
+    try:
+        user = get_object_or_404(UserModel, id=id)
+        transfers = Transfer.objects.filter(user_id=id, date__month=datetime.now().month)
+        valorTot = sum(Decimal(transfer.value) for transfer in transfers)
+        user.valorGasto = valorTot
+        return 200, model_to_dict(user)
+    except UserModel.DoesNotExist:
+        return 404, {"message": "Usuario nao encontrado!"}
+    except Exception as ex:
+        return 500, {"message": f"Erro ao buscar usuario Erro:{ex}"}
 
 def create_token(user):
     exp = datetime.now() + timedelta(seconds=settings.JWT_EXP_DELTA_SECONDS)
@@ -58,7 +48,7 @@ def create_token(user):
     return token
 
 
-@router.put("{int:id}", response={200: ResponseUserSchema, 404: MessageSchema})
+@router.put("{int:id}", response={206: MessageSchema, 404: MessageSchema, 500: MessageSchema})
 def putUser(request, id: int, u: UserSchema):
     try:
         nu = u.dict()
@@ -68,18 +58,23 @@ def putUser(request, id: int, u: UserSchema):
         user.email = nu["email"]
         user.save()
         user.refresh_from_db()
-        return user
+        return 206, {"message": "Usuario alterado com sucesso!"}
     except UserModel.DoesNotExist:
         return 404, {"message": "Usuario nao encontrado!"}
+    except Exception as ex:
+        return 500, {"message": f"Erro ao alterar usuario Erro:{ex}"}
 
 
 
-@router.delete("{int:id}", response={200: MessageSchema, 500: MessageSchema})
+@router.delete("{int:id}", response={200: MessageSchema, 404: MessageSchema,500: MessageSchema})
 def deleteUser(request, id: int):
     try:
         user = UserModel.objects.get(id=id)
         user.delete()
+        user.refresh_from_db()
         return 200, {"message": "Usuario deletado com sucesso!"}
+    except UserModel.DoesNotExist:
+        return 404, {"message": "Usuario nao encontrado!"}
     except Exception as ex:
         return 500, {"message": f"Erro ao deletar usuario Erro:{ex}"}
 

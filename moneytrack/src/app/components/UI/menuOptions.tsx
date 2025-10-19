@@ -9,6 +9,9 @@ import { parseCookies } from "nookies";
 import { toast } from "sonner";
 import DeleteTransfer from "@/app/http/deleteTransfer";
 import { queryClient } from "@/app/helper/useQuery";
+import { montserrat } from "../mainLayout";
+import Edit from "../../assets/edit"
+import Delete from "@/app/assets/delete";
 
 export const MenuOptions = ({ id }: { id: number }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,7 +45,7 @@ export const MenuOptions = ({ id }: { id: number }) => {
   };
   return (
     <div
-      className="flex flex-col h-full mt-3.5 justify-items-center relative"
+      className="flex flex-col h-full mt-3.5 justify-items-center relative cursor-pointer"
       onDrop={close}
     >
       <ModalDelete
@@ -59,16 +62,17 @@ export const MenuOptions = ({ id }: { id: number }) => {
         color="#0d542b"
       />
       <div
-        className={`origin-top-right absolute right-2 top-5 mt-2    rounded-md shadow-lg  w-[70px] h-[68px] flex flex-col scale-0 justify-items-center gap-1.5 transition-all duration-500 bg-green-400 z-20 ${
+        className={`origin-bottom-right absolute right-4 bottom-10 mt-2    rounded-md shadow-lg  w-[100px] h-[80px]  scale-0 justify-center items-center gap-1.5 transition-all duration-500 bg-green-400 z-50 ${
           isOpen && "scale-100"
         } `}
         onDrop={close}
       >
-        <ul className="w-fit h-fit p-2 justify-items-center gap-2">
-          <li>
-            <Link href={`/transfers/${id}`}>Editar</Link>
+        <ul className={`flex flex-col  w-full h-full  justify-around items-start text-green-50  p-1.5 ${montserrat.className} font-bold`}>
+          <li className="w-full">
+            <Link href={`/transfers/${id}`} className="w-full flex flex-row justify-around items-start"><Edit width={20} height={20} /> Editar</Link>
           </li>
-          <li className="cursor-pointer" onClick={openModal}>
+          <li className="cursor-pointer w-full flex flex-row justify-around items-start" onClick={openModal}>
+            <Delete width={20} height={20} />
             Excluir
           </li>
         </ul>

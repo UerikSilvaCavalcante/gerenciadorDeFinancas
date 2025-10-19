@@ -93,11 +93,14 @@ export const ModalAddCard = ({
             reset();
             close();
           }
+          return res;
         }),
         {
-          loading: "Adicionando cartão",
+          loading: "Adicionando cartão...",
           success: "Cartão adicionado com sucesso",
-          error: "Erro ao adicionar cartão",
+          error: (data) => {
+            return data.message
+          },
         }
       );
     }

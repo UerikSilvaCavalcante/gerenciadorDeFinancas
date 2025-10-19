@@ -22,13 +22,13 @@ export const ToollBar = () => {
   };
 
   return (
-    <div className="bg-green-500 flex flex-row justify-center items-center    px-4 py-1.5 gap-2.5 rounded-full  absolute top-2 left-2 z-50">
+    <div className="bg-green-500 flex flex-row justify-center items-center    px-4 py-1.5 gap-2.5 rounded-full  fixed top-2 left-2 z-50">
       <div className=" flex flex-row justify-center items-center p-0 m-0">
         <Image src={person} width={24} height={24} alt="person" />
       </div>
       <Suspense
         fallback={
-          <div className="w-[300px] h-7 bg-green-900 animate-pulse rounded-md"></div>
+          <div className="w-[200px] h-7 bg-green-900 animate-pulse rounded-md"></div>
         }
       >
         <User />

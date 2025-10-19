@@ -1,9 +1,10 @@
 
 @import "tailwindcss";
 
+
 html {
   scroll-behavior: smooth;
-  overflow-y: hidden;
+  overflow-y: scroll;
 }
 
 .slick-slider {
@@ -17,13 +18,13 @@ html {
 div[role="list"] {
   height: 100%;
 }
-.slick-list {
-  margin-left: 50px;
+.center {
   width: 100%;
   height: 100%;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
+  padding: 6% 0px 0px 0px;
 }
 
 .slick-slide > div{
@@ -104,7 +105,8 @@ div::-webkit-scrollbar-thumb {
 
 @keyframes load {
   from {
-    width: 0;
+    stroke-dashoffset: 0;
+    stoke-dasharray: 0;
   }
 }
 
@@ -124,3 +126,34 @@ animation: load 2s ease-in-out  ;
 .suger-opt {
   animation: surge 2s ease-in-out  ;
 }
+
+.progressbar__svg {
+	width: 100%;
+	height: 100%;
+	fill: none;
+	stroke-width: 10;
+	/* stroke-dasharray: 440;
+	stroke-dashoffset: 440; */
+	stroke: hsl(52.7% 0.154 150.069);
+
+	stroke-linecap: round;
+	transform: translate(5px, 5px); 
+  animation: load 2s ease-in-out
+}
+
+.progressbar {
+  width: 100%;
+	height: 100%;
+	fill: none;
+	stroke-width: 10;
+	stroke-dasharray: 0;
+	stroke-dashoffset: 440;
+	stroke: hsl(52.7% 0.154 150.069);
+
+	stroke-linecap: round;
+	transform: translate(5px, 5px); 
+}
+
+/* @function strokeDashoffset($num) {
+	@return 440 - (440 * $num) / 100;
+} */

@@ -35,21 +35,22 @@ export default async function Page({
   const { transferId } = await params;
   const token = await (await cookies()).get("token")?.value;
   const data = await getTransferDetail(Number(transferId), token as string);
-  console.log(data);
   if (!data) {
     return notFound();
   } else {
     return (
       <MainLayout title="Detalhes da transferência">
-        <div className="w-[500px] h-full flex flex-col justify-center items-center gap-2.5 py-2.5">
+       <div className="w-full h-screen flex justify-center items-center">
+         <div className="w-[80vw] lg:w-[500px] h-full flex flex-col justify-center items-center gap-2.5 py-2.5">
           <h1
             className={`${hammersmithOne.className} text-green-900 text-3xl font-bold text-center w-full `}
           >
             Informação do Gasto
           </h1>
 
-          <FormTrasnfer transfer={data} />
+          <FormTrasnfer storedTransfer={data} />
         </div>
+       </div>
       </MainLayout>
     );
   }

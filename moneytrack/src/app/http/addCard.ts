@@ -1,9 +1,10 @@
 import { CardType } from "../@types/cardType";
+import { ResponseProps } from "../@types/IResponse";
 
 export async function AddCard(
   card: CardType,
   token: string
-): Promise<boolean | null> {
+): Promise<ResponseProps> {
   const response = await fetch("http://127.0.0.1:8000/api/card/add", {
     method: "POST",
     headers: {
@@ -19,8 +20,12 @@ export async function AddCard(
       limit: card.limit,
     }),
   });
+  const data = await response.json();
   if (response.ok) {
-    return true;
+    return {
+      success: true,
+      message: "Cartão adicionado com sucesso",
+    };
   }
-  return null;
+  throw new Error(data.message);
 }

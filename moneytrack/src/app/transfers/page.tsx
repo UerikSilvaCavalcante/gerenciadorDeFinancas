@@ -172,8 +172,8 @@ export default function Transfer() {
 
   return (
     <MainLayout title="Transfers">
-      <div className="flex flex-row h-full w-[70vw] gap-2.5 p-2.5 ">
-        <div className=" h-full w-full flex flex-col justify-center items-center p-2 bg-green-100 gap-2">
+      <div className="flex flex-col lg:flex-row h-full w-[90vw] gap-2.5 p-2.5 ">
+        <div className=" h-[70vh] lg:h-full lg:w-[70%] w-full  flex flex-col justify-center items-center p-2 bg-green-100 gap-2">
           <div className="h-full w-full ">
             {isLoading ? (
               <div className="w-full h-full flex justify-center items-center ">
@@ -199,7 +199,7 @@ export default function Transfer() {
             )}
           </div>
         </div>
-        <div className="h-full w-[500px] flex flex-col justify-between items-center bg-green-400 rounded-md p-2.5">
+        <div className="h-[30%] lg:h-full w-full lg:w-[30%] flex flex-col justify-between items-center bg-green-400 rounded-md p-2.5">
           <div className="w-full flex  justify-center items-center ">
             <div className="w-[20px] h-[20px] bg-green-900 rounded-full "></div>
             <div className="w-full h-1 bg-green-600 rounded-full"></div>

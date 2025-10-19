@@ -1,18 +1,17 @@
 "use client";
-import MainLayout, {
+import {
   hammersmithOne,
   montserrat,
 } from "../components/mainLayout";
 import person from "../assets/person.svg";
 import Image from "next/image";
 import { AuthContext } from "../action/valid";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "../components/UI/input";
 import { ResponseUserType, UserType } from "../@types/userType";
-import { useQuery } from "@tanstack/react-query";
 import { parseCookies } from "nookies";
 import { getUserById } from "../http/getUserbyId";
 import { jwtDecode } from "jwt-decode";
@@ -23,16 +22,8 @@ import back from "../assets/arrow-left-circle.svg";
 import { toast } from "sonner";
 import editUser from "../http/editUser";
 import { ModalDelete, useModelTransition } from "../components/modalDelete";
-import {
-  ModalChangePass,
-  useModelTransition as useModelTransitionPass,
-} from "../components/modalChangePass";
 import { useRouter } from "next/navigation";
 import deleteUser from "../http/deleteUser";
-import { verify } from "crypto";
-import verifyCode from "../http/verifyCode";
-import getCode from "../http/getCode";
-import { id } from "zod/locales";
 const userForm = z.object({
   id: z.number(),
   username: z.string().min(1, "Campo Obrigatorio"),
@@ -46,11 +37,6 @@ export default function Config() {
   const { token } = parseCookies();
   const [isLoading, setIsLoading] = useState(true);
   const { isOpen, open, close } = useModelTransition();
-  const {
-    isOpen: isOpenPass,
-    open: openPass,
-    close: closePass,
-  } = useModelTransitionPass();
   const router = useRouter();
   const { Logout } = useContext(AuthContext);
 
@@ -122,8 +108,8 @@ export default function Config() {
           <Image src={back} width={24} height={24} alt="voltar" />
         </Link>
       </div>
-      <div className="flex flex-col p-0 m-0 w-fit  max-w-[80vw]  drop-shadow-2xl shadow-2xl rounded-md bg-zinc-50 ">
-        <div className="bg-green-600 w-[30vw] min-h-[50vh] p-2.5 flex flex-col justify-start items-center rounded-md">
+      <div className="flex flex-col p-0 m-0 justify-center items-center   max-w-[80vw]  drop-shadow-2xl shadow-2xl rounded-md bg-zinc-50 ">
+        <div className="bg-green-600 w-[80vw] lg:w-[30vw] min-h-[50vh] p-2.5 flex flex-col justify-start items-center rounded-md">
           {isLoading ? (
             <div className="w-full h-[50vh] flex justify-center items-center">
               <Loader />
@@ -225,7 +211,7 @@ export default function Config() {
                   />
                 </div>
               </form>
-              <Link href="/recoveryPass">
+              <Link href="/recoveryPass" className="w-full">
                 <PrimaryButton width="w-full" content="Redefinir Senha" />
               </Link>
               <PrimaryButton

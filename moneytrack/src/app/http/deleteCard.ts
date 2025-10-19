@@ -1,10 +1,6 @@
-import { ResponseProps } from "./editCard"
-interface DeleteCardProps {
-    success: boolean
-    message: string
-}
+import { ResponseProps } from "../@types/IResponse";
 
-export default async function DeleteCard(id:number, token:string):Promise<DeleteCardProps> {
+export default async function DeleteCard(id:number, token:string):Promise<ResponseProps> {
     const response = await fetch(`http://127.0.0.1:8000/api/card/${id}`, {
         method: "DELETE",
         headers: {
@@ -13,7 +9,12 @@ export default async function DeleteCard(id:number, token:string):Promise<Delete
     })
     
     const data = await response.json();
-    return data
-
+    if (response.ok){
+        return {
+            success: true,
+            message: data.message
+        }
+    }
+    throw new Error(data.message)
 }
 

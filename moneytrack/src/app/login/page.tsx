@@ -62,7 +62,7 @@ export default function Login() {
 
   return (
     <div className="bg-zinc-100 flex items-center justify-center h-screen w-screen py-12">
-      <div className="bg-zinc-50 flex-col drop-shadow-xl rounded-md w-[480px] h-full px-20 py-0">
+      <div className="bg-zinc-50 flex flex-col  drop-shadow-xl rounded-md w-[480px] h-full px-20 py-0 justify-center items-center">
         <div>
           <h1
             className={`${hammersmithOne.className} text-green-700 text-6xl text-center pt-10`}
@@ -70,7 +70,7 @@ export default function Login() {
             LOGIN
           </h1>
         </div>
-        <form action="" className="flex flex-col items-center justify-center">
+        <form action="" className="flex flex-col items-center justify-center w-full">
           <div className="flex flex-col w-full p-3.5 gap-2.5">
             <label
               htmlFor="username"
@@ -122,7 +122,7 @@ export default function Login() {
           <button
             type="submit"
             onClick={handleSubmit(handleSubmitForm)}
-            className="bg-green-500 text-zinc-50 cursor-pointer rounded-full py-1 px-4 w-full hover:bg-green-600 transition duration-300 ease-in-out drop-shadow-2xl flex justify-center items-center"
+            className="bg-green-500 text-zinc-50 cursor-pointer rounded-full py-1 px-4 w-full hover:bg-green-600 h-[30px] transition duration-300 ease-in-out drop-shadow-2xl flex justify-center items-center"
           >
             {isLoading ? <Loader /> : <p>Entrar</p>}
           </button>

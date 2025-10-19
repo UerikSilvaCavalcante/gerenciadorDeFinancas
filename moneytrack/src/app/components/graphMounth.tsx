@@ -80,7 +80,7 @@ export const ChartMounth = () => {
               <Line
                 type="monotone"
                 dataKey="act_mounth"
-                stroke="#90EE90"
+                stroke="#032e15"
                 strokeWidth={3}
                 dot={false}
                 activeDot={{ r: 6 }}
@@ -91,7 +91,7 @@ export const ChartMounth = () => {
               <Line
                 type="monotone"
                 dataKey="past_mounth"
-                stroke="#006400"
+                stroke="#05df72"
                 strokeWidth={3}
                 dot={false}
                 activeDot={{ r: 6 }}
@@ -110,7 +110,7 @@ export const ChartMounth = () => {
           </div>
         )
       ) : (
-        <div className="w-full h-full flex justify-center items-center rounded-md bg-green-950 opacity-15 animate-pulse"></div>
+        <div className="w-full h-full flex justify-center items-center rounded-md bg-green-950 opacity-15 animate-pulse  "></div>
       )}
     </div>
   );

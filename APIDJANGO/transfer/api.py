@@ -46,7 +46,7 @@ def getall_transfers(request, id: int):
 
             t["payment_method"] = transfer.get_payment_method_display()
             if transfer.card_id:
-                t["payment_method"] = f"{t['payment_method']}:{str(transfer.card_id)}"
+                t["payment_method"] = f"{t['payment_method']}: {str(transfer.card_id)}"
             d_transfers.append(t)
 
         months = [d_transfers["date"].split("-")[1] for d_transfers in d_transfers]
@@ -114,9 +114,6 @@ def get_transfer(request, id: int):
         d_transfer = model_to_dict(transfer)
         d_transfer["card_id"] = transfer.card_id.id if transfer.card_id else None
         d_transfer["description"] = transfer.description if transfer.description else ""
-        d_transfer.update({"card": str(transfer.card_id) if transfer.card_id else None})
-        d_transfer.update({"payment_method_id": transfer.payment_method})
-        d_transfer["payment_method"] = transfer.get_payment_method_display()
         return 200, d_transfer
     except Transfer.DoesNotExist:
         return 404, {"message": f"Transfer with id {id} not found."}
@@ -126,7 +123,7 @@ def get_transfer(request, id: int):
 
 @router.post(
     "add",
-    response={200: bool, 404: MessageSchema, 500: MessageSchema, 400: MessageSchema},
+    response={201: MessageSchema, 404: MessageSchema, 500: MessageSchema, 400: MessageSchema},
 )
 def add_transfer(request, transfer: TransferSchema):
     try:
@@ -138,7 +135,6 @@ def add_transfer(request, transfer: TransferSchema):
             if d_transfer["card_id"]
             else None
         )
-        print(card.type_card)
         if d_transfer["payment_method"] in [1, 3] and (card.type_card == 2):
             return 400, {
                 "message": f"Esse Tipo de Cartão não e aceito para o metodo de pagamento"
@@ -155,17 +151,19 @@ def add_transfer(request, transfer: TransferSchema):
         user.save()
         tr.refresh_from_db()
         user.refresh_from_db()
-        return True
+        return 201, {"message": "Transfer adicionada com sucesso."}
     except UserModel.DoesNotExist:
-        return 404, {"message": f"User with id {d_transfer['user_id']} not found."}
+        return 404, {"message": f"Usuario não encontrado."}
     except CardModel.DoesNotExist:
-        return 404, {"message": f"Card with id {d_transfer['card_id']} not found."}
+        return 404, {"message": f"Cartão não encontrado."}
+    except Exception as e:
+        return 500, {"message": f"Erro ao adicionar transferencia: {str(e)}"}
 
 
 @router.put(
     "{int:id}",
     response={
-        200: ResponseTransferSchema,
+        200: MessageSchema,
         404: MessageSchema,
         500: MessageSchema,
         400: MessageSchema,
@@ -220,13 +218,15 @@ def update_transfer(request, id: int, transfer: TransferSchema):
             str(db_transfer.card_id) if db_transfer.card_id else None
         )
         d_transfer["date"] = db_transfer.date.strftime("%Y-%m-%d")
-        return d_transfer
+        return 200, d_transfer
     except Transfer.DoesNotExist:
-        return 404, {"message": f"Transfer with id {id} not found."}
+        return 404, {"message": f"Gasto não encontrado."}
     except UserModel.DoesNotExist:
-        return 404, {"message": f"User with id {d_transfer['user_id']} not found."}
+        return 404, {"message": f"Usuario não encotrado."}
     except CardModel.DoesNotExist:
-        return 404, {"message": f"Card with id {d_transfer['card_id']} not found."}
+        return 404, {"message": f"Cartão não encotrado."}
+    except Exception as e:
+        return 500, {"message": f"Erro ao atualizar transferencia Error: {str(e)}"}
 
 
 @router.delete("{int:id}/", response={200: MessageSchema, 404: MessageSchema})
@@ -237,9 +237,13 @@ def delete_transfer(request, id: int):
         user.valorGasto = Decimal(user.valorGasto) - Decimal(db_transfer.value)
         user.save()
         db_transfer.delete()
-        return 200, {"message": f"Transfer with id {id} deleted successfully."}
+        return 200, {"message": f"Gasto deletado com sucesso."}
 
     except UserModel.DoesNotExist:
-        return 404, {"message": f"User with id {db_transfer.user_id.id} not found."}
+        return 404, {"message": f"Usuario não encotrado."}
     except CardModel.DoesNotExist:
-        return 404, {"message": f"Card with id {db_transfer.card_id.id} not found."}
+        return 404, {"message": f"Cartão não encotrado."}
+    except Transfer.DoesNotExist:
+        return 404, {"message": f"Gasto nao encontrado."}
+    except Exception as e:
+        return 500, {"message": f"Erro ao deletar transferencia: {str(e)}"}
