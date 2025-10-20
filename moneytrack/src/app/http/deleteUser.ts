@@ -1,16 +1,23 @@
-interface ResponseProps {
-    message: string
-}
+"use server";
+import { ResponseProps } from "../@types/IResponse";
 
 export default async function deleteUser(id:number, token:string):Promise<ResponseProps> {
-    const response = await fetch(`http://127.0.0.1:8000/api/user/${id}`, {
+      const url = process.env.API_URL
+
+    const response = await fetch(`${url}/user/${id}`, {
         method: "DELETE",
         headers: {
             Authorization: `Bearer ${token}`,
         },
     })
     const data = await response.json();
-    return data
+    if (response.ok){
+        return {
+            success: true,
+            message: "Usuário deletado com sucesso"
+        }
+    }
+    throw new Error(data.message)
 
 }
 

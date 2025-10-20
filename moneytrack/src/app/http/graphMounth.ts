@@ -1,7 +1,10 @@
+"use server";
 import { GraphMounthType } from "../@types/graphType";
 
 export async function getGraphMounth(id: number, token: string) {
-    const response = await fetch(`http://127.0.0.1:8000/api/dashboard/plts/mes/${id}`, {
+      const url = process.env.API_URL
+
+    const response = await fetch(`${url}/dashboard/plts/mes/${id}`, {
         method: "GET",
         headers: {
             Authorization: `Bearer ${token}`,

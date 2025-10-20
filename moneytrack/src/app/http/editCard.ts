@@ -1,12 +1,13 @@
-import { ResponseCardType, CardType } from "../@types/cardType";
-export interface ResponseProps {
-    message:string
-}
+"use server";
+import { CardType } from "../@types/cardType";
+import { ResponseProps } from "../@types/IResponse";
 export async function EditCard(
   card: CardType,
   token: string
-): Promise<ResponseCardType | ResponseProps> {
-  const response = await fetch(`http://127.0.0.1:8000/api/card/${card.id}`, {
+): Promise<ResponseProps> {
+  const url = process.env.API_URL;
+
+  const response = await fetch(`${url}/card/${card.id}`, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -22,5 +23,11 @@ export async function EditCard(
     }),
   });
   const data = await response.json();
-  return data
+  if (response.ok){
+    return {
+      success: true,
+      message: "Cartão alterado com sucesso",
+    }
+  }
+  throw new Error(data.message)
 }

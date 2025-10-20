@@ -65,9 +65,9 @@ export const ChartMounth = () => {
                   value: "Gasto (R$)",
                   angle: -90,
                   position: "insideLeft",
-                  offset: 10,
+                  offset: 0,
                 }}
-                domain={["dataMin - 5", "dataMax + 5"]}
+                domain={["dataMin", "dataMax + 5"]}
               />
               <Tooltip
                 formatter={(value) =>
@@ -82,7 +82,7 @@ export const ChartMounth = () => {
                 dataKey="act_mounth"
                 stroke="#032e15"
                 strokeWidth={3}
-                dot={false}
+                dot={true}
                 activeDot={{ r: 6 }}
                 connectNulls={false}
                 name={dayjs().month(now ).format("MMMM").toLocaleUpperCase()}
@@ -93,7 +93,7 @@ export const ChartMounth = () => {
                 dataKey="past_mounth"
                 stroke="#05df72"
                 strokeWidth={3}
-                dot={false}
+                dot={true}
                 activeDot={{ r: 6 }}
                 connectNulls={false}
                 name={dayjs().month(now - 1).format("MMMM").toLocaleUpperCase()}

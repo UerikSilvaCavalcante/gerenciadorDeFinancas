@@ -1,8 +1,10 @@
-
+"use server";
 import { RespnseTransferType } from "../@types/transferType";
 
 export async function getTransferDetail(id: number, token:string): Promise<RespnseTransferType | null> {
-    const response = await fetch(`http://127.0.0.1:8000/api/transfer/detail/${id}`, {
+      const url = process.env.API_URL
+
+    const response = await fetch(`${url}/transfer/detail/${id}`, {
         method: "GET",
         headers: {
             Authorization: `Bearer ${token}`,

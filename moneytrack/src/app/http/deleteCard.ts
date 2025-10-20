@@ -1,7 +1,9 @@
+"use server";
 import { ResponseProps } from "../@types/IResponse";
 
 export default async function DeleteCard(id:number, token:string):Promise<ResponseProps> {
-    const response = await fetch(`http://127.0.0.1:8000/api/card/${id}`, {
+    const url = process.env.API_URL
+    const response = await fetch(`${url}/api/card/${id}`, {
         method: "DELETE",
         headers: {
             Authorization: `Bearer ${token}`,

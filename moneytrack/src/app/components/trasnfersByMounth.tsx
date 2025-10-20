@@ -100,12 +100,12 @@ const Trasnsfer = ({
     </div>
     <div className="flex flex-col justify-center items-start w-full h-full  px-2">
       <h1
-        className={`${hammersmithOne.className} text-green-900 text-sm lg:text-[16px] text-right font-bold`}
+        className={`${hammersmithOne.className} text-green-900 text-sm lg:text-[16px] text-left font-bold`}
       >
         {desc}
       </h1>
       <h1
-        className={`${montserrat.className} text-green-900 text-[10px] lg:text-sm text-right`}
+        className={`${montserrat.className} text-green-900 text-[10px] lg:text-sm text-left`}
       >
         {methood}
       </h1>

@@ -1,8 +1,11 @@
+"use server";
 import { ResponseProps } from "../@types/IResponse";
 import { TransferType } from "../@types/transferType";
 
 export default async function editTransfer(id:number, token:string, transfer:TransferType):Promise<ResponseProps> {
-    const response = await fetch(`http://127.0.0.1:8000/api/transfer/${id}`, {
+      const url = process.env.API_URL
+
+    const response = await fetch(`${url}/transfer/${id}`, {
         method: "PUT",
         headers: {
             Authorization: `Bearer ${token}`,

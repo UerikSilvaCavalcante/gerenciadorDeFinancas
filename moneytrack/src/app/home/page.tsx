@@ -114,7 +114,7 @@ export default function Home() {
     <MainLayout title="Home">
       <ModalAddCard isOpen={isOpen} close={close} />
       <div className="flex flex-col w-[90vw] h-full  justify-center items-center bg-transparent">
-        <div className="w-full lg:h-[60%] flex lg:flex-row justify-around gap-4 rounded-md items-center bg-transparent p-2 ">
+        <div className="w-full lg:h-[55%] flex lg:flex-row justify-around gap-2 rounded-md items-center bg-transparent p-1 ">
           <div className="w-full h-[700px] flex flex-col lg:flex-row justify-around lg:h-full p-1.5 gap-2 bg-green-200 drop-shadow-2xl shadow-2xl  ">
             <div className="lg:w-1/2 w-full h-full flex flex-col justify-center items-center bg-green-100 p-0.5 rounded-md">
               <h1
@@ -134,9 +134,9 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="w-full h-[40%]  flex flex-col lg:flex-row justify-around gap-2.5 rounded-md items-center bg-transparent p-2.5 ">
-          <div className="flex flex-col w-full lg:w-[40%] h-full gap-6 bg-green-200 drop-shadow-2xl shadow-2xl rounded-md">
-            <div className="w-full  p-3 flex flex-row ">
+        <div className="w-full h-[45%]  flex flex-col lg:flex-row justify-around gap-2.5 rounded-md items-center bg-transparent p-1.5 ">
+          <div className="flex flex-col w-full lg:w-[40%] h-full bg-green-200 drop-shadow-2xl shadow-2xl rounded-md">
+            <div className="w-full  p-0.5 flex flex-row ">
               <h1
                 className={`${hammersmithOne.className} text-green-900 text-2xl text-center w-full`}
               >

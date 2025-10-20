@@ -1,10 +1,9 @@
-interface ResponseDelete {
-    success: boolean
-    message: string
-}
+"use server";
+import { ResponseProps } from "../@types/IResponse";
 
-export default async function DeleteTransfer(id: number, token: string): Promise<ResponseDelete> {
-  const response = await fetch(`http://127.0.0.1:8000/api/transfer/${id}/`, {
+export default async function DeleteTransfer(id: number, token: string): Promise<ResponseProps> {
+  const url = process.env.API_URL
+  const response = await fetch(`${url}/transfer/${id}/`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -17,8 +16,5 @@ export default async function DeleteTransfer(id: number, token: string): Promise
       message: data.message,
     };
   }
-  return {
-    success: false,
-    message: data.message,
-  };
+  throw new Error(data.message);
 }

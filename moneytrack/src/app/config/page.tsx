@@ -88,14 +88,19 @@ export default function Config() {
   const handleDelete = () => {
     toast.promise(
       deleteUser(user?.id as number, token as string).then((res) => {
-        Logout();
-        router.push("/");
-        return res.message;
+        if(res.success){
+          Logout()
+          router.push("/")
+          
+        }
+        return res
       }),
       {
         loading: "Deletando...",
         success: "Deletado com sucesso",
-        error: `Erro ao deletar`,
+        error:(data) => {
+          return data.message
+        },
       }
     );
   };

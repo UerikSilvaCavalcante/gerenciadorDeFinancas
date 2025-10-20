@@ -1,3 +1,4 @@
+"use server";
 import { CardType } from "../@types/cardType";
 import { ResponseProps } from "../@types/IResponse";
 
@@ -5,7 +6,8 @@ export async function AddCard(
   card: CardType,
   token: string
 ): Promise<ResponseProps> {
-  const response = await fetch("http://127.0.0.1:8000/api/card/add", {
+  const url = process.env.API_URL
+  const response = await fetch(`${url}/card/add`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,

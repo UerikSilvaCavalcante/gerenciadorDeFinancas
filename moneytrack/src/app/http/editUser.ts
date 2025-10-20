@@ -1,3 +1,4 @@
+"use server";
 import { ResponseUserType, UserType } from "../@types/userType";
 interface ResponseError {
   message: string;
@@ -7,7 +8,9 @@ export default async function editUser(
   user: UserType,
   token: string
 ): Promise<ResponseUserType | ResponseError> {
-  const response = await fetch(`http://127.0.0.1:8000/api/user/${user.id}`, {
+  const url = process.env.API_URL;
+
+  const response = await fetch(`${url}/user/${user.id}`, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,

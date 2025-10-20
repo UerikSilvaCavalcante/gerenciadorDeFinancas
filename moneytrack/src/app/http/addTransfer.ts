@@ -1,15 +1,13 @@
+"use server";
 import { TransferType } from "../@types/transferType";
-
-interface ResponseProps {
-  success: boolean;
-  message: string;
-}
+import { ResponseProps } from "../@types/IResponse";
 
 export async function AddTransfer(
   transfer: TransferType,
   token: string
 ): Promise<ResponseProps> {
-  const reponse = await fetch("http://127.0.0.1:8000/api/transfer/add", {
+  const url = process.env.API_URL
+  const reponse = await fetch(`${url}/transfer/add`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,

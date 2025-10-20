@@ -1,10 +1,12 @@
+"use server";
 import { UserType } from "../@types/userType";
 export interface ResponseError{
     message: string
 }
 
 export async function AddUser(newUser:UserType): Promise<boolean | ResponseError> {
-    const response = await fetch("http://127.0.0.1:8000/api/auth/add/", {
+    const url = process.env.API_URL
+    const response = await fetch(`${url}/auth/add/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

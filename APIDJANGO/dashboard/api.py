@@ -58,8 +58,8 @@ def get_plts_gastos(request, id:int):
     df = pd.DataFrame({'Tipos': tipos, 'Gastos': gastos})
     df_grouped = df.sort_values(by="Gastos", ascending=False)
     df_grouped = df_grouped.groupby('Tipos', as_index=False)['Gastos'].sum()
-    types = list(df_grouped['Tipos'])[:3]
-    gastos = list(df_grouped['Gastos'])[:3]
+    types = list(df_grouped['Tipos'])[:5]
+    gastos = list(df_grouped['Gastos'])[:5]
     response = []
     for tp in types:
         response.append({

@@ -1,11 +1,14 @@
+"use server";
 import { TransferMounthType } from "../@types/transferType";
 
 export async function getListTransfers(
   id: number,
   token: string
 ): Promise<TransferMounthType[]> {
+    const url = process.env.API_URL
+
   const response = await fetch(
-    `http://127.0.0.1:8000/api/transfer/list/${id}`,
+    `${url}/transfer/list/${id}`,
     {
       method: "GET",
       headers: {

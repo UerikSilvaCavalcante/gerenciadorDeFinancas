@@ -1,13 +1,11 @@
-interface ResponseProps {
-  success: boolean;
-  message: string;
-}
-
+"use server";
+import { ResponseProps } from "../@types/IResponse";
 export default async function changePassword(
   email: string,
   password: string,
 ): Promise<ResponseProps> {
-  const response = await fetch(`http://127.0.0.1:8000/api/verification/password/`, {
+  const url = process.env.API_URL
+  const response = await fetch(`${url}/verification/password/`, {
     method: "POST",
     
     body: JSON.stringify({
@@ -23,8 +21,5 @@ export default async function changePassword(
     };
   }
 
-  return {
-    success: false,
-    message: data.message,
-  };
+  throw new Error(data.message);
 }

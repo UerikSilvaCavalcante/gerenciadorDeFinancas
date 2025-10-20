@@ -34,12 +34,14 @@ export const MenuOptions = ({ id }: { id: number }) => {
         }
         close();
         closeModal()
-        return res.message;
+        return res;
       }),
       {
         loading: "Excluindo transferencia",
         success: "Transferencia excluida com sucesso",
-        error: "Erro ao excluir transferencia",
+        error: (data) => {
+          return data.message;
+        },
       }
     );
   };

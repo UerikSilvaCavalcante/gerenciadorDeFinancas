@@ -137,7 +137,7 @@ export function RenderCardDetail({
     };
     toast.promise(
       EditCard(cardPut, token).then((res) => {
-        if ((res as ResponseCardType).id) {
+        if (res.success) {
           queryClient.invalidateQueries({ queryKey: ["cards"] });
           window.location.reload();
         }
@@ -145,7 +145,9 @@ export function RenderCardDetail({
       {
         loading: "Editando cartão",
         success: "Cartão editado com sucesso",
-        error: "Erro ao editar cartão",
+        error: (data) => {
+          return data.message;
+        },
       }
     );
   };
@@ -234,16 +236,16 @@ export function RenderCardDetail({
   return (
     <MainLayout title="Card Transfer">
       <ModalDelete close={close} isOpen={isOpen} handleDelete={handleDelete} />
-      <div className="flex flex-row h-full w-[60vw] gap-2.5 p-2.5 ">
-        <div className=" h-full w-full flex flex-col justify-center items-center p-2 bg-green-100 gap-2.5 relative ">
-          <div className="w-full h-[30%]  flex flex-row  justify-center items-center gap-32">
+      <div className="flex flex-col lg:flex-row h-full w-[95vw] lg:w-[70vw] gap-2.5 p-2.5 ">
+        <div className=" h-[90vh] lg:h-full w-full flex flex-col justify-center items-center p-2  gap-2.5 relative ">
+          <div className="w-full lg:h-[40%] bg-green-100 rounded-md flex flex-col lg:flex-row  justify-around  items-center p-2.5 gap-2 ">
             <CardComponent
               id={card.card.id}
               bank={card.card.bank}
               type={card.card.type_card}
               bander={card.card.bander}
               color={card.card.color}
-              className="w-[600px] h-[150px]"
+              className="lg:w-[500px] lg:h-[100px] h-[90px] w-[50px]"
             />
             <div
               className="absolute top-2 right-2 cursor-pointer"
@@ -251,20 +253,20 @@ export function RenderCardDetail({
             >
               <Trash />
             </div>
-            <div className=" h-full flex flex-col justify-center items-center">
+            <div className=" h-full flex w-full flex-col justify-center items-center">
               <h1
-              className={`${hammersmithOne.className} text-green-900 text-center text-xl`}
+              className={`${hammersmithOne.className} text-green-900 text-center text-[12px] lg:text-xl`}
             >
               Limite disponivel do Cartão
             </h1>
-            <div className="w-full flex justify-center items-center gap-1 relative">
-              <div className="relative w-[170px] h-[170px] -rotate-90">
+            <div className="w-full  flex justify-center items-center gap-1 relative">
+              <div className="relative w-[100px] h-[100px] lg:w-[150px] lg:h-[150px] -rotate-90">
                 <svg className="relative w-full h-full">
                   <circle
                     className="progressbar stroke-green-300"
-                    cx="80"
-                    cy="80"
-                    r="70"
+                    cx="50%"
+                    cy="50%"
+                    r="40%"
                   ></circle>
                   <circle
                     className="progressbar__svg stroke-green-700"
@@ -272,23 +274,23 @@ export function RenderCardDetail({
                       strokeDasharray: card.card.limit,
                       strokeDashoffset: card.card.limit - utilitedLimit,
                     }}
-                    cx="80"
-                    cy="80"
-                    r="70"
+                    cx="50%"
+                    cy="50%"
+                    r="40%"
                   ></circle>
 
                   {/* <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-3xl text-green-900 rotate-90">
                   {card.card.limit - card.limit}
                 </span> */}
                 </svg>
-                <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-lg text-green-900 rotate-90">
+                <span className="absolute top-[50%] left-1/2 transform -translate-x-[40%] -translate-y-[20%] text-[12px] lg:text-sm text-green-900 rotate-90">
                   R${Number(card.card.limit - card.limit).toFixed(2)}
                 </span>
               </div>
             </div>
             </div>
           </div>
-          <div className="w-full h-[60%] ">
+          <div className="w-full h-[60%] bg-green-100 rounded-md">
             {filteredData && filteredData.length > 0 ? (
               <div className=" w-full h-full ">
                 <List
@@ -310,7 +312,7 @@ export function RenderCardDetail({
           </div>
         </div>
 
-        <div className="h-full w-[500px] flex flex-col justify-start items-start bg-green-400 rounded-md p-2.5">
+        <div className="lg:h-full h-[30%] lg:w-[40%] w-full flex flex-col justify-start items-start bg-green-400 rounded-md p-2.5">
           <div className="w-full flex  justify-center items-center ">
             <div className="w-[20px] h-[20px] bg-green-900 rounded-full "></div>
             <div className="w-full h-1 bg-green-600 rounded-full"></div>

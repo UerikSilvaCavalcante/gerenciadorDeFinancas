@@ -1,3 +1,5 @@
+"use server";
+
 interface ResponseProps {
   access_token: string;
   token_type: string;
@@ -8,7 +10,8 @@ export async function getlogin({
   username,
   password,
 }: LoginType): Promise<ResponseProps> {
-  const response = await fetch("http://127.0.0.1:8000/api/auth/", {
+  const url = process.env.API_URL!;
+  const response = await fetch(`${url}/auth/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -25,7 +28,7 @@ export async function getlogin({
       token_type: data.token_type,
     };
   }
-  const data = await response.json();
+
   return {
     access_token: "",
     token_type: "",
