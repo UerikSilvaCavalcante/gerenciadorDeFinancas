@@ -5,11 +5,7 @@ APIDJANGO/dashboard/__pycache__/
 APIDJANGO/transfer/__pycache__/
 APIDJANGO/user/__pycache__/
 APIDJANGO/apifinancas/pg_service.conf
-APIDJANGO/apifinancas/migrations/
-APIDJANGO/card/migrations/
-APIDJANGO/dashboard/migrations/
-APIDJANGO/transfer/migrations/
-APIDJANGO/user/migrations/
+
 APIDJANGO/env/
 UML.drawio
 assets/
