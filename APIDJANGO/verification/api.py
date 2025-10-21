@@ -51,7 +51,6 @@ def send_mail(email, code):
     msg["To"] = email
     msg["Subject"] = "Recuperar Senha"
     msg.attach(MIMEText(corpo_email, "html"))
-    server = smtplib.SMTP("smtp.gmail.com: 587")
 
     s = smtplib.SMTP("smtp.gmail.com: 587")
     s.starttls()

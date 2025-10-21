@@ -58,6 +58,8 @@ export default function Login() {
       return;
     }
     setMessageError("Usuário ou senha inválidos");
+    setIsLoading(false);
+    return
   }
 
   return (

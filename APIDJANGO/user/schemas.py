@@ -5,7 +5,7 @@ from user.models import UserModel
 class UserSchema(ModelSchema):
     class Config:
         model = UserModel
-        model_fields = ['name', 'username', 'email']
+        model_fields = ['name', 'username', 'email', 'password']
 
 class ResponseUserSchema(ModelSchema):
     class Config:
