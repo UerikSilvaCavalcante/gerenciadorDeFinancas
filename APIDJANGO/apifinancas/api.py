@@ -45,7 +45,7 @@ public_router = Router(auth=None)
 def loginUser(request, l: LoginSchema):
     lo = l.dict()
     try:
-        user = get_object_or_404(UserModel, username=lo["username"])
+        user = UserModel.objects.get(username=lo["username"])
         validate = user.validate_password(lo["password"])
         if validate:
             token = create_token(user)
