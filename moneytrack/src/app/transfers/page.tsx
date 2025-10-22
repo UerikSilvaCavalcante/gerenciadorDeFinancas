@@ -35,7 +35,7 @@ export type trasnferFilterForm = z.infer<typeof trasnferFilter>;
 
 
 
-export const Row = ({
+const Row = ({
   index,
   style,
   filteredData,
@@ -72,7 +72,7 @@ export const Row = ({
   );
 };
 
-export const rowHeight = (index: number, { filteredData }: RowProps) => {
+const rowHeight = (index: number, { filteredData }: RowProps) => {
   const trasnfer = filteredData[index].days;
   const trasnferHeight = trasnfer.length;
   const day = trasnfer.flatMap((d) => d.transfers);
