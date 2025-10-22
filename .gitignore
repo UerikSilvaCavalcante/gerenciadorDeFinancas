@@ -8,7 +8,7 @@ APIDJANGO/apifinancas/pg_service.conf
 
 APIDJANGO/env/
 UML.drawio
-assets/
+
 
 ### Django ###
 *.log
