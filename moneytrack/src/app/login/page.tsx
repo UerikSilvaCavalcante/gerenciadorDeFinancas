@@ -125,7 +125,7 @@ export default function Login() {
           >
             {isLoading ? <Loader /> : <p>Entrar</p>}
           </button>
-          <Link href="/sing-in" className="w-full">
+          <Link href="/singIn" className="w-full">
             <button className="bg-green-50 text-green-500 border-green-500 border-2 cursor-pointer rounded-full py-1 px-4 w-full drop-shadow-2xl">
               Cadastrar
             </button>

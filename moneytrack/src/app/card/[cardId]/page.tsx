@@ -6,12 +6,12 @@ import { notFound } from "next/navigation";
 export default async function CardTransferId({
   params,
 }: {
-  params: Promise<{ card_id: string }>;
+  params: Promise<{ cardId: string }>;
 }) {
-  const { card_id } = await params;
+  const { cardId } = await params;
 
   const token = await (await cookies()).get("token")?.value;
-  const card = await GetCard(Number(card_id), token as string);
+  const card = await GetCard(Number(cardId), token as string);
   if (token && card) {
 
     return (
