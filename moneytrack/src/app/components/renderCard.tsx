@@ -7,7 +7,7 @@ import { List } from "react-window";
 import { type RowComponentProps } from "react-window";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { hammersmithOne } from "../components/mainLayout";
-import { trasnferFilterForm, trasnferFilter } from "../transfers/page";
+
 import { RowProps } from "../transfers/page";
 import { CardComponent } from "../components/cardComponent";
 import { CardForm, CardFormsType, TypeEnum } from "../components/modalAddCard";
@@ -27,6 +27,7 @@ import { Trash } from "./UI/trash";
 import { ModalDelete, useModelTransition } from "./modalDelete";
 import DeleteCard from "../http/deleteCard";
 import { useRouter } from "next/navigation";
+import z from "zod";
 
 const Row = ({ index, style, filteredData }: RowComponentProps<RowProps>) => {
   return (
@@ -65,6 +66,16 @@ const rowHeight = (index: number, { filteredData }: RowProps) => {
   const dayHeight = day.length;
   return 32 + trasnferHeight * 32 + dayHeight * 60;
 };
+
+const trasnferFilter = z.object({
+  min: z.number().min(0, { message: "O valor mínimo é 0" }).optional(),
+  max: z.number().min(0, { message: "O valor mínimo é 0" }).optional(),
+  type: z.array(z.string()).optional(),
+  de: z.date().optional(),
+  ate: z.date().optional(),
+});
+
+type trasnferFilterForm = z.infer<typeof trasnferFilter>;
 
 export function RenderCardDetail({
   card,

@@ -23,7 +23,7 @@ import Loader from "../components/loader";
 import { jwtDecode } from "jwt-decode";
 import { MenuOptions } from "../components/UI/menuOptions";
 
-export const trasnferFilter = z.object({
+const trasnferFilter = z.object({
   min: z.number().min(0, { message: "O valor mínimo é 0" }).optional(),
   max: z.number().min(0, { message: "O valor mínimo é 0" }).optional(),
   type: z.array(z.string()).optional(),
@@ -31,7 +31,7 @@ export const trasnferFilter = z.object({
   ate: z.date().optional(),
 });
 
-export type trasnferFilterForm = z.infer<typeof trasnferFilter>;
+type trasnferFilterForm = z.infer<typeof trasnferFilter>;
 
 
 
