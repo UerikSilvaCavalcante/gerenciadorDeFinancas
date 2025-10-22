@@ -1,5 +1,5 @@
 "use server";
-import { TransferMounthType } from "../../types/transferType";
+import { TransferMounthType } from "../types/transferType";
 
 export async function getListTransfers(
   id: number,

@@ -1,5 +1,5 @@
 "use server";
-import { RespnseTransferType } from "../../types/transferType";
+import { RespnseTransferType } from "../types/transferType";
 
 export async function getTransferDetail(
   id: number,

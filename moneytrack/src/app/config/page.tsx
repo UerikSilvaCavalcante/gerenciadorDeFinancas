@@ -8,7 +8,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "../components/UI/input";
-import { ResponseUserType, UserType } from "../../types/userType";
+import { ResponseUserType, UserType } from "../types/userType";
 import { parseCookies } from "nookies";
 import { getUserById } from "../http/getUserbyId";
 import { jwtDecode } from "jwt-decode";

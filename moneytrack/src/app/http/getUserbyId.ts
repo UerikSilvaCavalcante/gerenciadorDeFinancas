@@ -1,5 +1,5 @@
 "use server";
-import { ResponseUserType } from "../../types/userType";
+import { ResponseUserType } from "../types/userType";
 
 export async function getUserById(id: number, token: string) {
   const url = process.env.API_URL;

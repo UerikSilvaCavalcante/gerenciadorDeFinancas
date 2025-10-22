@@ -1,6 +1,6 @@
 "use server";
-import { TransferType } from "../../types/transferType";
-import { ResponseProps } from "../../types/IResponse";
+import { TransferType } from "../types/transferType";
+import { ResponseProps } from "../types/IResponse";
 
 export async function AddTransfer(
   transfer: TransferType,

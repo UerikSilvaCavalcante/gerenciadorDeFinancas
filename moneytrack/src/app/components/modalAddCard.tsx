@@ -12,7 +12,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { parseCookies } from "nookies";
 import { jwtDecode } from "jwt-decode";
-import { CardType } from "../../types/cardType";
+import { CardType } from "../types/cardType";
 import { AddCard } from "../http/addCard";
 import { queryClient } from "../helper/useQuery";
 

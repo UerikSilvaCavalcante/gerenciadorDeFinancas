@@ -184,7 +184,7 @@ export default function Home() {
             <h1
               className={`${hammersmithOne.className} text-green-900 text-2xl text-center w-full p-0.5`}
             >
-              Ultimas Trasnferencias
+              Ultimos Gastos
             </h1>
             <div className="w-full lg:h-full h-[160px] max-h-[25vh] relative border-t-2 border-green-900">
               {isLoading ? (

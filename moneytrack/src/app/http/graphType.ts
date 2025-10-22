@@ -1,5 +1,5 @@
 "use server";
-import { GraphType } from "../../types/graphType";
+import { GraphType } from "../types/graphType";
 
 export async function getGrauphType(id: number, token: string) {
   const url = process.env.API_URL;

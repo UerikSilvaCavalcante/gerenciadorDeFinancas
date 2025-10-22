@@ -29,7 +29,7 @@ export default function MainLayout({
       <ClientProvider>
         <Head title={title} />
         <ToollBar />
-        <div className="flex flex-col p-0 m-0 w-fit min-h-[85%] h-fit lg:max-h-[90%] lg:max-w-[90vw]  drop-shadow-2xl shadow-2xl rounded-md bg-zinc-50">
+        <div className="flex flex-col p-0 m-0 w-fit min-h-[85%] h-fit lg:max-h-[90%] lg:max-w-[95vw]  drop-shadow-2xl shadow-2xl rounded-md bg-zinc-50">
           {children}
         </div>
         <ModalAddTransfer isOpen={isOpen} close={close} />

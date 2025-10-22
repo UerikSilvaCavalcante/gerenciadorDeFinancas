@@ -1,5 +1,5 @@
 "use server";
-import { ResponseProps } from "../../types/IResponse";
+import { ResponseProps } from "../types/IResponse";
 export default async function changePassword(
   email: string,
   password: string
