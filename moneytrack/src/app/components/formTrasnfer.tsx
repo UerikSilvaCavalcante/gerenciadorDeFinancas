@@ -78,7 +78,7 @@ export const FormTrasnfer = ({
 
   useEffect(() => {
     if (data != undefined) {
-      reset();
+      reset();  
     }
   }, [data]);
 
@@ -278,7 +278,7 @@ export const FormTrasnfer = ({
             >
               <option value={0}>Selecione</option>
               {data ? (
-                data.map((cd, index) => (
+                data.map((cd) => (
                   <option key={cd.id} value={cd.id}>
                     {cd.bank} - {cd.type_card}
                   </option>

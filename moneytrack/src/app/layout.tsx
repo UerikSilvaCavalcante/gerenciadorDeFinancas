@@ -22,8 +22,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  types
 }: Readonly<{
   children: React.ReactNode;
+  types:string
 }>) {
   return (
     <html lang="pt-br">

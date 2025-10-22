@@ -49,58 +49,7 @@ export const ModalAddTransfer = ({
   isOpen: boolean;
   close: () => void;
 }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-    setError
-  } = useForm<transferFormType>({
-    resolver: zodResolver(trasnferForm),
-  });
-
-  const data = queryClient.getQueryData(["cards"]);
-
-  const handleSubmitForm = (data: transferFormType) => {
-    if (data.methood == PaymentMethodEnum.Credito && data.cartaoId <= 0) {
-      setError("cartaoId", { message: "Selecione um cartão" });
-      return;
-    }
-    const { token } = parseCookies();
-    if (token) {
-      const decode = jwtDecode<{
-        id: string;
-        exp: number;
-      }>(token);
-      const transfer: TransferType = {
-        id: 0,
-        user_id: Number(decode.id),
-        value: data.value,
-        description: data.desc || "",
-        type_transfer: data.type,
-        payment_method: data.methood,
-        card_id: data.cartaoId,
-        date: new Date(data.data),
-      };
-      toast.promise(
-        AddTransfer(transfer, token).then((res) => {
-          if (res) {
-            queryClient.invalidateQueries({ queryKey: ["transferList"] });
-            queryClient.invalidateQueries({ queryKey: ["graphType"] });
-            queryClient.invalidateQueries({ queryKey: ["graphMounth"] });
-
-            reset();
-            close();
-          }
-        }),
-        {
-          loading: "Adicionando transferência",
-          success: "Transferência adicionada com sucesso",
-          error: "Erro ao adicionar transferência",
-        }
-      );
-    }
-  };
+  
   return (
     <Dialog
       open={isOpen}

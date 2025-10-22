@@ -30,7 +30,7 @@ import { jwtDecode } from "jwt-decode";
 const SliderTyped = Slider as unknown as React.ComponentClass<Settings>;
 
 export default function Home() {
-  var settings = {
+  const settings = {
     infinite: true,
     speed: 500,
     slidesToShow: 1,

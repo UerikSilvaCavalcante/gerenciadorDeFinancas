@@ -1,7 +1,7 @@
 "use client";
 import menu from "../../assets/three-dots-vertical.svg";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { ModalDelete } from "../modalDelete";
 import { useModelTransition } from "../modalDelete";

@@ -19,7 +19,6 @@ export const AuthContext = createContext({} as AuthContextProps);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<ResponseUserType | null>(null);
   const isAuthenticaded = !!user;
-  const [isReady, setReady] = useState(false);
   useEffect(() => {
     const { token } = parseCookies();
     if (token) {
@@ -37,7 +36,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             valorGasto: user.valorGasto,
           });
         });
-        setReady(true);
       } catch (error) {
         console.error("Erro ao decodificar o token:", error);
       }

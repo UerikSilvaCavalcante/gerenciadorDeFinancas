@@ -31,13 +31,6 @@ const getRegister = z.object({
 
 type LoginForm = z.infer<typeof getRegister>;
 
-const InputForm = ({ id, type }: { id: string; type: string }) => (
-  <input
-    type={type}
-    className="border border-gray-900 bg-zinc-50 rounded-full p-1 w-full mb-4 focus:outline-none focus:ring-2 focus:ring-green-500 drop-shadow-2xl"
-    placeholder={`Enter your ${id}`}
-  />
-);
 
 export default function Page() {
   const [showPassword, setShowPassword] = useState(false);

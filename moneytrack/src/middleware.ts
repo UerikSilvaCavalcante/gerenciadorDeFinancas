@@ -19,7 +19,7 @@ export async function Autentication(request: NextRequest) {
   );
 
   if (!token && isProtectedRoute) {
-    let url = new URL("/", request.url);
+    const url = new URL("/", request.url);
     url.searchParams.set("unanthorized", "True");
     return NextResponse.redirect(new URL("/", request.url));
   }
@@ -39,7 +39,7 @@ export async function Autentication(request: NextRequest) {
         response.cookies.delete("token");
         return response;
       }
-    } catch (error) {
+    } catch  {
       const response = NextResponse.redirect(new URL("/", request.url));
       response.cookies.delete("token");
       return response;

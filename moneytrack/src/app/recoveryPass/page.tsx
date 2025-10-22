@@ -190,9 +190,9 @@ export default function RecoveryPass() {
     setIndex(index + 1);
   };
   const Fields = [
-    <EmailField handleEmail={handleEmail} handleLoad={handleLoad} togleField={togleField} />,
-    <CodeField email={emai} handleLoad={handleLoad} togleField={togleField} />,
-    <PasswordField email={emai} handleLoad={handleLoad} />,
+    <EmailField key={0} handleEmail={handleEmail} handleLoad={handleLoad} togleField={togleField} />,
+    <CodeField key={1} email={emai} handleLoad={handleLoad} togleField={togleField} />,
+    <PasswordField key={2} email={emai} handleLoad={handleLoad} />,
   ];
 
   return (

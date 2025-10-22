@@ -85,7 +85,7 @@ export type RowProps = {
 };
 
 export default function Transfer() {
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["transfers"],
     queryFn: () => {
       const { token } = parseCookies();
