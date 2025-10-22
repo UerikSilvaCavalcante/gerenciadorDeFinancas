@@ -1,6 +1,6 @@
 "use server";
-import { CardType } from "../../@types/cardType";
-import { ResponseProps } from "../../@types/IResponse";
+import { CardType } from "../../types/cardType";
+import { ResponseProps } from "../../types/IResponse";
 export async function EditCard(
   card: CardType,
   token: string

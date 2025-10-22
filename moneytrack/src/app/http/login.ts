@@ -5,7 +5,7 @@ interface ResponseProps {
   token_type: string;
 }
 
-import { LoginType } from "../../@types/userType";
+import { LoginType } from "../../types/userType";
 export async function getlogin({
   username,
   password,

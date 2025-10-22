@@ -9,7 +9,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { AddUser, ResponseError } from "../http/addUser";
-import { UserType } from "../../@types/userType";
+import { UserType } from "../../types/userType";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Loader from "../components/loader";

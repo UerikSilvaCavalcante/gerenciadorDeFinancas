@@ -1,5 +1,5 @@
 "use server";
-import { UserType } from "../../@types/userType";
+import { UserType } from "../../types/userType";
 export interface ResponseError {
   message: string;
 }

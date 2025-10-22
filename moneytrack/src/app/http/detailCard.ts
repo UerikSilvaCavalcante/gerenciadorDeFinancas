@@ -1,5 +1,5 @@
 "use server";
-import { CardDetailType } from "../../@types/cardType";
+import { CardDetailType } from "../../types/cardType";
 
 export async function GetCard(
   id: number,

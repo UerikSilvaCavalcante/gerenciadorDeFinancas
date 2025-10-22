@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { getlogin } from "../http/login";
-import { LoginType } from "../../@types/userType";
+import { LoginType } from "../../types/userType";
 import { AuthContext } from "../action/valid";
 import { useContext } from "react";
 import Loader from "../components/loader";

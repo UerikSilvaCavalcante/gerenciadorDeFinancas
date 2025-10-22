@@ -12,9 +12,9 @@ import { RowProps } from "../transfers/page";
 import { CardComponent } from "../components/cardComponent";
 import { CardForm, CardFormsType, TypeEnum } from "../components/modalAddCard";
 import { useForm, UseFormRegister } from "react-hook-form";
-import { CardDetailType, CardType } from "../../@types/cardType";
+import { CardDetailType, CardType } from "../../types/cardType";
 import { useEffect, useState } from "react";
-import { TransferMounthType } from "../../@types/transferType";
+import { TransferMounthType } from "../../types/transferType";
 import {
   TransferDay,
   TransferMounth,

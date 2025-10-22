@@ -16,7 +16,7 @@ import { useForm, UseFormRegister } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { hammersmithOne } from "../components/mainLayout";
 import { useQuery } from "@tanstack/react-query";
-import { TransferMounthType } from "../../@types/transferType";
+import { TransferMounthType } from "../../types/transferType";
 import { parseCookies } from "nookies";
 import { getListTransfers } from "../http/getListTransfers";
 import Loader from "../components/loader";

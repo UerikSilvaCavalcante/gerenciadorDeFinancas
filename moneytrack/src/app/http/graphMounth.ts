@@ -1,5 +1,5 @@
 "use server";
-import { GraphMounthType } from "../../@types/graphType";
+import { GraphMounthType } from "../../types/graphType";
 
 export async function getGraphMounth(id: number, token: string) {
   const url = process.env.API_URL;
