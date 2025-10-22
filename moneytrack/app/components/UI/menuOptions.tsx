@@ -7,11 +7,11 @@ import { ModalDelete } from "../modalDelete";
 import { useModelTransition } from "../modalDelete";
 import { parseCookies } from "nookies";
 import { toast } from "sonner";
-import DeleteTransfer from "@/app/http/deleteTransfer";
-import { queryClient } from "@/app/helper/useQuery";
+import DeleteTransfer from "../../http/deleteTransfer";
+import { queryClient } from "../../helper/useQuery";
 import { montserrat } from "../mainLayout";
-import Edit from "../../assets/edit"
-import Delete from "@/app/assets/delete";
+import Edit from "../../assets/edit";
+import Delete from "../../assets/delete";
 
 export const MenuOptions = ({ id }: { id: number }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +33,7 @@ export const MenuOptions = ({ id }: { id: number }) => {
           queryClient.invalidateQueries({ queryKey: ["graphType"] });
         }
         close();
-        closeModal()
+        closeModal();
         return res;
       }),
       {
@@ -69,11 +69,21 @@ export const MenuOptions = ({ id }: { id: number }) => {
         } `}
         onDrop={close}
       >
-        <ul className={`flex flex-col  w-full h-full  justify-around items-start text-green-50  p-1.5 ${montserrat.className} font-bold`}>
+        <ul
+          className={`flex flex-col  w-full h-full  justify-around items-start text-green-50  p-1.5 ${montserrat.className} font-bold`}
+        >
           <li className="w-full">
-            <Link href={`/transfers/${id}`} className="w-full flex flex-row justify-around items-start"><Edit width={20} height={20} /> Editar</Link>
+            <Link
+              href={`/transfers/${id}`}
+              className="w-full flex flex-row justify-around items-start"
+            >
+              <Edit width={20} height={20} /> Editar
+            </Link>
           </li>
-          <li className="cursor-pointer w-full flex flex-row justify-around items-start" onClick={openModal}>
+          <li
+            className="cursor-pointer w-full flex flex-row justify-around items-start"
+            onClick={openModal}
+          >
             <Delete width={20} height={20} />
             Excluir
           </li>

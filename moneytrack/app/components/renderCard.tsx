@@ -1,25 +1,21 @@
 "use client";
 
-import MainLayout from "../components/mainLayout";
-import { Input, Checkbox, Select } from "../components/UI/input";
-import { PrimaryButton, SecundaryButton } from "../components/UI/buttons";
+import MainLayout from "./mainLayout";
+import { Input, Checkbox, Select } from "./UI/input";
+import { PrimaryButton, SecundaryButton } from "./UI/buttons";
 import { List } from "react-window";
 import { type RowComponentProps } from "react-window";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { hammersmithOne } from "../components/mainLayout";
+import { hammersmithOne } from "./mainLayout";
 
 import { RowProps } from "../transfers/page";
-import { CardComponent } from "../components/cardComponent";
-import { CardForm, CardFormsType, TypeEnum } from "../components/modalAddCard";
+import { CardComponent } from "./cardComponent";
+import { CardForm, CardFormsType, TypeEnum } from "./modalAddCard";
 import { useForm, UseFormRegister } from "react-hook-form";
 import { CardDetailType, CardType } from "../types/cardType";
 import { useEffect, useState } from "react";
 import { TransferMounthType } from "../types/transferType";
-import {
-  TransferDay,
-  TransferMounth,
-  Trasnsfer,
-} from "../components/trasnfersByMounth";
+import { TransferDay, TransferMounth, Trasnsfer } from "./trasnfersByMounth";
 import { toast } from "sonner";
 import { EditCard } from "../http/editCard";
 import { queryClient } from "../helper/useQuery";
