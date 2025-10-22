@@ -10,7 +10,6 @@ import saude from "../assets/tipos_transfers/saude.svg";
 import transporte from "../assets/tipos_transfers/transporte.svg";
 import outros from "../assets/tipos_transfers/outros.svg";
 import conta from "../assets/tipos_transfers/conta.svg";
-import { MenuOptions } from "./UI/menuOptions";
 import { TypeTransferEnum } from "../enums/TransferEnums";
 
 dayjs.locale("pt-br");

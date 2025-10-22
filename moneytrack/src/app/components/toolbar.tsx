@@ -2,15 +2,11 @@ import person from "../assets/person.svg";
 import gear from "../assets/gear.svg";
 import Image from "next/image";
 import logout from "../assets/box-arrow-right.svg";
-import { Hammersmith_One } from "next/font/google";
 import Link from "next/link";
 import { lazy, Suspense, useContext } from "react";
 import { AuthContext } from "../action/valid";
 import { useRouter } from "next/navigation";
-const hammersmithOne = Hammersmith_One({
-  weight: "400",
-  subsets: ["latin"],
-});
+
 const User = lazy(() => import("./user"));
 
 export const ToollBar = () => {

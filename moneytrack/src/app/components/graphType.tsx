@@ -13,7 +13,6 @@ import {
   Tooltip,
 } from "recharts";
 import { hammersmithOne } from "./mainLayout";
-import Loader from "./loader";
 
 export const ChartType = () => {
   const { data, isLoading } = useQuery({

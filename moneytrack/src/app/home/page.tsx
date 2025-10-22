@@ -1,13 +1,11 @@
 "use client";
 
 import MainLayout from "../components/mainLayout";
-import { ToollBar } from "../components/toolbar";
 
 import Image from "next/image";
-import Link from "next/link";
 import plus from "../assets/plus.svg";
 import { CardComponent } from "../components/cardComponent";
-import React, { Component } from "react";
+import React from "react";
 import Slider, { Settings } from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";

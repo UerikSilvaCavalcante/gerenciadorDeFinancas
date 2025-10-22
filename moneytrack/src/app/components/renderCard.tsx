@@ -5,15 +5,14 @@ import { Input, Checkbox, Select } from "../components/UI/input";
 import { PrimaryButton, SecundaryButton } from "../components/UI/buttons";
 import { List } from "react-window";
 import { type RowComponentProps } from "react-window";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { hammersmithOne, montserrat } from "../components/mainLayout";
+import { hammersmithOne } from "../components/mainLayout";
 import { trasnferFilterForm, trasnferFilter } from "../transfers/page";
 import { RowProps } from "../transfers/page";
 import { CardComponent } from "../components/cardComponent";
 import { CardForm, CardFormsType, TypeEnum } from "../components/modalAddCard";
 import { useForm, UseFormRegister } from "react-hook-form";
-import { CardDetailType, CardType, ResponseCardType } from "../@types/cardType";
+import { CardDetailType, CardType } from "../@types/cardType";
 import { useEffect, useState } from "react";
 import { TransferMounthType } from "../@types/transferType";
 import {

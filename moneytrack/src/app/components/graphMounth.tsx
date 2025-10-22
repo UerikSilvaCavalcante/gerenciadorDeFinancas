@@ -16,7 +16,6 @@ import {
 } from "recharts";
 import { getGraphMounth } from "../http/graphMounth";
 import { hammersmithOne } from "./mainLayout";
-import Loader from "./loader";
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
 dayjs.locale("pt-br");

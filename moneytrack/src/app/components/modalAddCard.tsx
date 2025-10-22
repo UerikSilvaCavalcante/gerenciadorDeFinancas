@@ -1,14 +1,12 @@
 "use client";
 
 import {
-  Description,
   Dialog,
   DialogPanel,
-  DialogTitle,
   DialogBackdrop,
 } from "@headlessui/react";
 import { PrimaryButton, SecundaryButton } from "./UI/buttons";
-import { hammersmithOne, montserrat } from "./mainLayout";
+import { hammersmithOne } from "./mainLayout";
 import { Input, Select } from "./UI/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";

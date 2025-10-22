@@ -7,13 +7,9 @@ import {
   DialogBackdrop,
 } from "@headlessui/react";
 
-import { PrimaryButton, SecundaryButton } from "./UI/buttons";
+import { PrimaryButton } from "./UI/buttons";
 import { useState } from "react";
 import { hammersmithOne, montserrat } from "./mainLayout";
-import DeleteCard from "../http/deleteCard";
-import { toast } from "sonner";
-import { ResponseProps } from "../http/editCard";
-import { useRouter } from "next/navigation";
 export const useModelTransition = () => {
   const [isOpen, setIsOpen] = useState(false);
   const open = () => setIsOpen(true);

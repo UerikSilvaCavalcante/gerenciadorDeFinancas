@@ -13,7 +13,6 @@ import { UserType } from "../@types/userType";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Loader from "../components/loader";
-import { truncate } from "fs/promises";
 const hammersmithOne = Hammersmith_One({
   weight: "400",
   subsets: ["latin"],

@@ -1,5 +1,5 @@
 "use client";
-import { hammersmithOne, montserrat } from "./mainLayout";
+import { hammersmithOne } from "./mainLayout";
 import { Input, Select } from "./UI/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,7 +11,6 @@ import { jwtDecode } from "jwt-decode";
 import { toast } from "sonner";
 import { AddTransfer } from "../http/addTransfer";
 import { queryClient } from "../helper/useQuery";
-import { CardType } from "../@types/cardType";
 import { PrimaryButton, SecundaryButton } from "./UI/buttons";
 import { RespnseTransferType } from "../@types/transferType";
 import { useQuery } from "@tanstack/react-query";
