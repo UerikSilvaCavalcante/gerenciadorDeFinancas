@@ -4,7 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import { ReactNode, useEffect, useState } from "react";
 import { createContext } from "react";
 import { setCookie, parseCookies, destroyCookie } from "nookies";
-import { ResponseUserType } from "@/app/@types/userType";
+import { ResponseUserType } from "@/@types/userType";
 import { getUserById } from "../http/getUserbyId";
 
 type AuthContextProps = {
@@ -72,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticaded, user, Login , Logout}}>
+    <AuthContext.Provider value={{ isAuthenticaded, user, Login, Logout }}>
       {children}
     </AuthContext.Provider>
   );

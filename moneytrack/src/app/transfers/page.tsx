@@ -8,7 +8,7 @@ import {
 } from "../components/trasnfersByMounth";
 import { Input, Checkbox } from "../components/UI/input";
 import { PrimaryButton, SecundaryButton } from "../components/UI/buttons";
-import { List  } from "react-window";
+import { List } from "react-window";
 import { type RowComponentProps } from "react-window";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,7 +16,7 @@ import { useForm, UseFormRegister } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { hammersmithOne } from "../components/mainLayout";
 import { useQuery } from "@tanstack/react-query";
-import { TransferMounthType } from "../@types/transferType";
+import { TransferMounthType } from "../../@types/transferType";
 import { parseCookies } from "nookies";
 import { getListTransfers } from "../http/getListTransfers";
 import Loader from "../components/loader";
@@ -31,15 +31,9 @@ const trasnferFilter = z.object({
   ate: z.date().optional(),
 });
 
-type trasnferFilterForm = z.infer<typeof trasnferFilter>;
+export type trasnferFilterForm = z.infer<typeof trasnferFilter>;
 
-
-
-const Row = ({
-  index,
-  style,
-  filteredData,
-}: RowComponentProps<RowProps>) => {
+const Row = ({ index, style, filteredData }: RowComponentProps<RowProps>) => {
   return (
     <div
       className="w-full h-full flex flex-row justify-start items-start"
@@ -54,15 +48,17 @@ const Row = ({
           >
             <TransferDay date={day.day} valueTot={day.valueTot} />
             {day.transfers.map((transfer, index) => (
-              <div className="w-full h-[60px] flex justify-items-center " key={index}>
+              <div
+                className="w-full h-[60px] flex justify-items-center "
+                key={index}
+              >
                 <Trasnsfer
-                
-                value={transfer.value}
-                desc={transfer.desc ? transfer.desc : ""}
-                methood={transfer.payment_method}
-                type={transfer.type_transfer}
-              />
-              <MenuOptions id={transfer.id} />
+                  value={transfer.value}
+                  desc={transfer.desc ? transfer.desc : ""}
+                  methood={transfer.payment_method}
+                  type={transfer.type_transfer}
+                />
+                <MenuOptions id={transfer.id} />
               </div>
             ))}
           </div>
@@ -77,7 +73,7 @@ const rowHeight = (index: number, { filteredData }: RowProps) => {
   const trasnferHeight = trasnfer.length;
   const day = trasnfer.flatMap((d) => d.transfers);
   const dayHeight = day.length;
-  return 32 + (trasnferHeight * 32 )+ (dayHeight * 60);
+  return 32 + trasnferHeight * 32 + dayHeight * 60;
 };
 
 export type RowProps = {
@@ -118,54 +114,57 @@ export default function Transfer() {
     if (data) {
       let filtered = data;
 
-      filtered = data.map((item) => {
-        const trasnfers = item.days
-          .map((day) => {
-            const filteredTransfers = day.transfers.filter((transfer) => {
-              // sem filtro de tipo -> aceita todos
-              if (!filterForm.type || filterForm.type.length <= 0) {
-                return true;
-              }
+      filtered = data
+        .map((item) => {
+          const trasnfers = item.days
+            .map((day) => {
+              const filteredTransfers = day.transfers.filter((transfer) => {
+                // sem filtro de tipo -> aceita todos
+                if (!filterForm.type || filterForm.type.length <= 0) {
+                  return true;
+                }
 
-              const allowed = filterForm.type
-                ? new Set(filterForm.type.map(Number))
-                : null;
-              return allowed?.has(Number(transfer.type_transfer));
+                const allowed = filterForm.type
+                  ? new Set(filterForm.type.map(Number))
+                  : null;
+                return allowed?.has(Number(transfer.type_transfer));
+              });
+              const newValueTot = filteredTransfers.reduce(
+                (s, t) => Number(s) + (Number(t.value) ?? 0),
+                0
+              );
+              return {
+                ...day,
+                valueTot: newValueTot,
+                transfers: filteredTransfers,
+              };
+            })
+            .filter((day) => day.transfers && day.transfers.length > 0)
+            .filter((day) => {
+              const minOk =
+                filterForm.min == undefined ||
+                Number(day.valueTot) >= filterForm.min;
+              const maxOk =
+                filterForm.max == undefined ||
+                Number(day.valueTot) <= filterForm.max;
+              return minOk && maxOk;
+            })
+            .filter((day) => day.transfers && day.transfers.length > 0)
+            .filter((day) => {
+              const minDate =
+                filterForm.de == null ||
+                new Date(day.day) >= new Date(filterForm.de);
+              const maxDate =
+                filterForm.ate == null ||
+                new Date(day.day) <= new Date(filterForm.ate);
+              return minDate && maxDate;
             });
-            const newValueTot = filteredTransfers.reduce(
-              (s, t) => Number(s) + (Number(t.value) ?? 0),
-              0
-            );
-            return {
-              ...day,
-              valueTot: newValueTot,
-              transfers: filteredTransfers,
-            };
-          })
-          .filter((day) => day.transfers && day.transfers.length > 0)
-          .filter((day) => {
-            
-            const minOk =
-              filterForm.min == undefined || Number(day.valueTot) >= filterForm.min;
-            const maxOk =
-              filterForm.max == undefined || Number(day.valueTot) <= filterForm.max;
-            return minOk && maxOk;
-          })
-          .filter((day) => day.transfers && day.transfers.length > 0)
-          .filter((day) => {
-            const minDate =
-              filterForm.de == null ||
-              new Date(day.day) >= new Date(filterForm.de);
-            const maxDate =
-              filterForm.ate == null ||
-              new Date(day.day) <= new Date(filterForm.ate);
-            return minDate && maxDate;
-          });
-        return {
-          ...item,
-          days: trasnfers,
-        };
-      }).filter((item) =>  item.days && item.days.length > 0);
+          return {
+            ...item,
+            days: trasnfers,
+          };
+        })
+        .filter((item) => item.days && item.days.length > 0);
       setFilteredData(filtered);
     }
   };
@@ -179,23 +178,21 @@ export default function Transfer() {
               <div className="w-full h-full flex justify-center items-center ">
                 <Loader />
               </div>
+            ) : filteredData && filteredData.length > 0 ? (
+              <List
+                rowComponent={Row}
+                rowCount={filteredData.length}
+                rowProps={{ filteredData }}
+                rowHeight={rowHeight}
+              />
             ) : (
-              filteredData && filteredData.length > 0 ? (
-                <List
-                  rowComponent={Row}
-                  rowCount={filteredData.length}
-                  rowProps={{ filteredData }}
-                  rowHeight={rowHeight}
-                />
-              ) : (
-                <div className="w-full h-full flex justify-center items-center">
-                  <h1
-                    className={`${hammersmithOne.className} text-green-900 text-sm text-center`}
-                  >
-                    Nenhum Gasto encontrado
-                  </h1>
-                </div>
-              )
+              <div className="w-full h-full flex justify-center items-center">
+                <h1
+                  className={`${hammersmithOne.className} text-green-900 text-sm text-center`}
+                >
+                  Nenhum Gasto encontrado
+                </h1>
+              </div>
             )}
           </div>
         </div>

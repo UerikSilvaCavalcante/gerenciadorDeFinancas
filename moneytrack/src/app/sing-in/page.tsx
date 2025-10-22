@@ -9,7 +9,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { AddUser, ResponseError } from "../http/addUser";
-import { UserType } from "../@types/userType";
+import { UserType } from "../../@types/userType";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Loader from "../components/loader";
@@ -30,7 +30,6 @@ const getRegister = z.object({
 });
 
 type LoginForm = z.infer<typeof getRegister>;
-
 
 export default function Page() {
   const [showPassword, setShowPassword] = useState(false);
@@ -190,9 +189,9 @@ export default function Page() {
             className="bg-green-50 text-green-500 cursor-pointer rounded-full py-1 px-4 w-full hover:bg-green-100  transition duration-300 ease-in-out drop-shadow-2xl"
           >
             {isLoading ? (
-             <div className="w-full h-full flex justify-center items-center">
-               <Loader />
-             </div>
+              <div className="w-full h-full flex justify-center items-center">
+                <Loader />
+              </div>
             ) : (
               <p>Salvar</p>
             )}

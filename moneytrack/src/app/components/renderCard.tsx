@@ -12,9 +12,9 @@ import { RowProps } from "../transfers/page";
 import { CardComponent } from "../components/cardComponent";
 import { CardForm, CardFormsType, TypeEnum } from "../components/modalAddCard";
 import { useForm, UseFormRegister } from "react-hook-form";
-import { CardDetailType, CardType } from "../@types/cardType";
+import { CardDetailType, CardType } from "../../@types/cardType";
 import { useEffect, useState } from "react";
-import { TransferMounthType } from "../@types/transferType";
+import { TransferMounthType } from "../../@types/transferType";
 import {
   TransferDay,
   TransferMounth,
@@ -265,39 +265,39 @@ export function RenderCardDetail({
             </div>
             <div className=" h-full flex w-full flex-col justify-center items-center">
               <h1
-              className={`${hammersmithOne.className} text-green-900 text-center text-[12px] lg:text-xl`}
-            >
-              Limite disponivel do Cartão
-            </h1>
-            <div className="w-full  flex justify-center items-center gap-1 relative">
-              <div className="relative w-[100px] h-[100px] lg:w-[150px] lg:h-[150px] -rotate-90">
-                <svg className="relative w-full h-full">
-                  <circle
-                    className="progressbar stroke-green-300"
-                    cx="50%"
-                    cy="50%"
-                    r="40%"
-                  ></circle>
-                  <circle
-                    className="progressbar__svg stroke-green-700"
-                    style={{
-                      strokeDasharray: card.card.limit,
-                      strokeDashoffset: card.card.limit - utilitedLimit,
-                    }}
-                    cx="50%"
-                    cy="50%"
-                    r="40%"
-                  ></circle>
+                className={`${hammersmithOne.className} text-green-900 text-center text-[12px] lg:text-xl`}
+              >
+                Limite disponivel do Cartão
+              </h1>
+              <div className="w-full  flex justify-center items-center gap-1 relative">
+                <div className="relative w-[100px] h-[100px] lg:w-[150px] lg:h-[150px] -rotate-90">
+                  <svg className="relative w-full h-full">
+                    <circle
+                      className="progressbar stroke-green-300"
+                      cx="50%"
+                      cy="50%"
+                      r="40%"
+                    ></circle>
+                    <circle
+                      className="progressbar__svg stroke-green-700"
+                      style={{
+                        strokeDasharray: card.card.limit,
+                        strokeDashoffset: card.card.limit - utilitedLimit,
+                      }}
+                      cx="50%"
+                      cy="50%"
+                      r="40%"
+                    ></circle>
 
-                  {/* <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-3xl text-green-900 rotate-90">
+                    {/* <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-3xl text-green-900 rotate-90">
                   {card.card.limit - card.limit}
                 </span> */}
-                </svg>
-                <span className="absolute top-[50%] left-1/2 transform -translate-x-[40%] -translate-y-[20%] text-[12px] lg:text-sm text-green-900 rotate-90">
-                  R${Number(card.card.limit - card.limit).toFixed(2)}
-                </span>
+                  </svg>
+                  <span className="absolute top-[50%] left-1/2 transform -translate-x-[40%] -translate-y-[20%] text-[12px] lg:text-sm text-green-900 rotate-90">
+                    R${Number(card.card.limit - card.limit).toFixed(2)}
+                  </span>
+                </div>
               </div>
-            </div>
             </div>
           </div>
           <div className="w-full h-[60%] bg-green-100 rounded-md">

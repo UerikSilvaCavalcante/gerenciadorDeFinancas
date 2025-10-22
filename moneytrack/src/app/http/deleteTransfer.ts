@@ -1,8 +1,11 @@
 "use server";
-import { ResponseProps } from "../@types/IResponse";
+import { ResponseProps } from "../../@types/IResponse";
 
-export default async function DeleteTransfer(id: number, token: string): Promise<ResponseProps> {
-  const url = process.env.API_URL
+export default async function DeleteTransfer(
+  id: number,
+  token: string
+): Promise<ResponseProps> {
+  const url = process.env.API_URL;
   const response = await fetch(`${url}/transfer/${id}/`, {
     method: "DELETE",
     headers: {

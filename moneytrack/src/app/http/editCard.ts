@@ -1,6 +1,6 @@
 "use server";
-import { CardType } from "../@types/cardType";
-import { ResponseProps } from "../@types/IResponse";
+import { CardType } from "../../@types/cardType";
+import { ResponseProps } from "../../@types/IResponse";
 export async function EditCard(
   card: CardType,
   token: string
@@ -23,11 +23,11 @@ export async function EditCard(
     }),
   });
   const data = await response.json();
-  if (response.ok){
+  if (response.ok) {
     return {
       success: true,
       message: "Cartão alterado com sucesso",
-    }
+    };
   }
-  throw new Error(data.message)
+  throw new Error(data.message);
 }

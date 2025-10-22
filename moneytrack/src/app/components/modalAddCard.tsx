@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  Dialog,
-  DialogPanel,
-  DialogBackdrop,
-} from "@headlessui/react";
+import { Dialog, DialogPanel, DialogBackdrop } from "@headlessui/react";
 import { PrimaryButton, SecundaryButton } from "./UI/buttons";
 import { hammersmithOne } from "./mainLayout";
 import { Input, Select } from "./UI/input";
@@ -16,7 +12,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { parseCookies } from "nookies";
 import { jwtDecode } from "jwt-decode";
-import { CardType } from "../@types/cardType";
+import { CardType } from "../../@types/cardType";
 import { AddCard } from "../http/addCard";
 import { queryClient } from "../helper/useQuery";
 
@@ -97,7 +93,7 @@ export const ModalAddCard = ({
           loading: "Adicionando cartão...",
           success: "Cartão adicionado com sucesso",
           error: (data) => {
-            return data.message
+            return data.message;
           },
         }
       );

@@ -1,12 +1,12 @@
 "use server";
-import { CardType } from "../@types/cardType";
-import { ResponseProps } from "../@types/IResponse";
+import { CardType } from "../../@types/cardType";
+import { ResponseProps } from "../../@types/IResponse";
 
 export async function AddCard(
   card: CardType,
   token: string
 ): Promise<ResponseProps> {
-  const url = process.env.API_URL
+  const url = process.env.API_URL;
   const response = await fetch(`${url}/card/add`, {
     method: "POST",
     headers: {

@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { getlogin } from "../http/login";
-import { LoginType } from "../@types/userType";
+import { LoginType } from "../../@types/userType";
 import { AuthContext } from "../action/valid";
 import { useContext } from "react";
 import Loader from "../components/loader";
@@ -30,14 +30,13 @@ const getLogin = z.object({
 
 type LoginForm = z.infer<typeof getLogin>;
 
-
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [messageError, setMessageError] = useState("");
   const { register, handleSubmit, formState } = useForm<LoginForm>({
     resolver: zodResolver(getLogin),
-  }); 
+  });
 
   const router = useRouter();
   const { Login } = useContext(AuthContext);
@@ -52,7 +51,7 @@ export default function Login() {
     }
     setMessageError("Usuário ou senha inválidos");
     setIsLoading(false);
-    return
+    return;
   }
 
   return (
@@ -65,7 +64,10 @@ export default function Login() {
             LOGIN
           </h1>
         </div>
-        <form action="" className="flex flex-col items-center justify-center w-full">
+        <form
+          action=""
+          className="flex flex-col items-center justify-center w-full"
+        >
           <div className="flex flex-col w-full p-3.5 gap-2.5">
             <label
               htmlFor="username"
@@ -113,7 +115,9 @@ export default function Login() {
           </div>
         </form>
         <div className="flex gap-7 flex-col w-full justify-center items-center  p-3.5">
-          {messageError && <p className="text-red-500 text-sm">{messageError}</p>}
+          {messageError && (
+            <p className="text-red-500 text-sm">{messageError}</p>
+          )}
           <button
             type="submit"
             onClick={handleSubmit(handleSubmitForm)}

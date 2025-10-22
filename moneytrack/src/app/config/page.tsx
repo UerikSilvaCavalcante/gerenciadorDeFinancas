@@ -1,8 +1,5 @@
 "use client";
-import {
-  hammersmithOne,
-  montserrat,
-} from "../components/mainLayout";
+import { hammersmithOne, montserrat } from "../components/mainLayout";
 import person from "../assets/person.svg";
 import Image from "next/image";
 import { AuthContext } from "../action/valid";
@@ -11,7 +8,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "../components/UI/input";
-import { ResponseUserType, UserType } from "../@types/userType";
+import { ResponseUserType, UserType } from "../../@types/userType";
 import { parseCookies } from "nookies";
 import { getUserById } from "../http/getUserbyId";
 import { jwtDecode } from "jwt-decode";
@@ -84,22 +81,20 @@ export default function Config() {
     );
   };
 
-
   const handleDelete = () => {
     toast.promise(
       deleteUser(user?.id as number, token as string).then((res) => {
-        if(res.success){
-          Logout()
-          router.push("/")
-          
+        if (res.success) {
+          Logout();
+          router.push("/");
         }
-        return res
+        return res;
       }),
       {
         loading: "Deletando...",
         success: "Deletado com sucesso",
-        error:(data) => {
-          return data.message
+        error: (data) => {
+          return data.message;
         },
       }
     );

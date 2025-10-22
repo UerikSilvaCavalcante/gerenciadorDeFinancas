@@ -1,13 +1,13 @@
 "use server";
-import { ResponseProps } from "../@types/IResponse";
+import { ResponseProps } from "../../@types/IResponse";
 export default async function changePassword(
   email: string,
-  password: string,
+  password: string
 ): Promise<ResponseProps> {
-  const url = process.env.API_URL
+  const url = process.env.API_URL;
   const response = await fetch(`${url}/verification/password/`, {
     method: "POST",
-    
+
     body: JSON.stringify({
       email: email,
       password: password,

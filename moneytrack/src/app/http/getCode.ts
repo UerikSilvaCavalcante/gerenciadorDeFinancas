@@ -1,6 +1,6 @@
 "use server";
 
-import { ResponseProps } from "../@types/IResponse";
+import { ResponseProps } from "../../@types/IResponse";
 
 export default async function getCode(email: string): Promise<ResponseProps> {
   const url = process.env.API_URL;

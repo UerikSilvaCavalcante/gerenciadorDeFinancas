@@ -1,5 +1,5 @@
 "use server";
-import { ResponseCardType } from "../@types/cardType";
+import { ResponseCardType } from "../../@types/cardType";
 
 export async function GetCartoes(
   id: number,

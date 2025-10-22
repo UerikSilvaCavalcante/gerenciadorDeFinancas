@@ -1,12 +1,12 @@
 "use server";
-import { TransferType } from "../@types/transferType";
-import { ResponseProps } from "../@types/IResponse";
+import { TransferType } from "../../@types/transferType";
+import { ResponseProps } from "../../@types/IResponse";
 
 export async function AddTransfer(
   transfer: TransferType,
   token: string
 ): Promise<ResponseProps> {
-  const url = process.env.API_URL
+  const url = process.env.API_URL;
   const reponse = await fetch(`${url}/transfer/add`, {
     method: "POST",
     headers: {
