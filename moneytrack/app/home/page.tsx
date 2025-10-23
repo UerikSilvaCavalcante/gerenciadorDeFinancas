@@ -30,15 +30,7 @@ import { jwtDecode } from "jwt-decode";
 const SliderTyped = Slider as unknown as React.ComponentClass<Settings>;
 
 export default function Home() {
-  const settings = {
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    centerPadding: "0px",
-    slidesToScroll: 1,
-    centerMode: true,
-    className:"center"
-  };
+  
   const Row = ({ index, style, filteredData }: RowComponentProps<RowProps>) => {
     return (
       <div
@@ -97,6 +89,16 @@ export default function Home() {
       }
     },
   });
+
+  const settings = {
+    infinite: cardData?.length as number > 1 ? true : false,
+    speed: 500,
+    slidesToShow: 1,
+    centerPadding: "0px",
+    slidesToScroll: 1,
+    centerMode: true,
+    className:"center"
+  };
 
   const rowHeight = (index: number, { filteredData }: RowProps) => {
     const trasnfer = filteredData[index].days;
@@ -180,7 +182,7 @@ export default function Home() {
               )}
             </div>
           </div>
-          <div className="lg:w-[60%] w-full h-full flex flex-col justify-between items-center   bg-green-200 drop-shadow-2xl shadow-2xl rounded-md relative">
+          <div className="lg:w-[60%] w-full h-full flex flex-col justify-around items-center   bg-green-200 drop-shadow-2xl shadow-2xl rounded-md relative">
             <h1
               className={`${hammersmithOne.className} text-green-900 text-2xl text-center w-full p-0.5`}
             >
