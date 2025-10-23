@@ -1,6 +1,6 @@
 "use server";
-
-interface ResponseProps {
+import { ResponseProps } from "../types/IResponse";
+interface tokenProps extends ResponseProps {
   access_token: string;
   token_type: string;
 }
@@ -9,28 +9,35 @@ import { LoginType } from "../types/userType";
 export async function getlogin({
   username,
   password,
-}: LoginType): Promise<ResponseProps> {
+}: LoginType): Promise<tokenProps> {
   const url = process.env.API_URL!;
-  const response = await fetch(`${url}/auth/`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      username: username,
-      password: password,
-    }),
-  });
-  if (response.ok) {
+  try {
+    const response = await fetch(`${url}/auth/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password,
+      }),
+    });
     const data = await response.json();
+    if (response.ok) {
+      return {
+        success: true,
+        message: "Login efetuado com sucesso",
+        access_token: data.access_token,
+        token_type: data.token_type,
+      };
+    }
     return {
+      success: false,
+      message: data.message,
       access_token: data.access_token,
       token_type: data.token_type,
     };
+  } catch (e) {
+    throw new Error("Erro no servidor");
   }
-
-  return {
-    access_token: "",
-    token_type: "",
-  };
 }

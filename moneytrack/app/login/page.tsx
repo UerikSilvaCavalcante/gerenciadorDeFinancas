@@ -14,6 +14,7 @@ import { LoginType } from "../types/userType";
 import { AuthContext } from "../action/valid";
 import { useContext } from "react";
 import Loader from "../components/loader";
+import { Interface } from "readline";
 const hammersmithOne = Hammersmith_One({
   weight: "400",
   subsets: ["latin"],
@@ -43,15 +44,21 @@ export default function Login() {
 
   async function handleSubmitForm(data: LoginForm) {
     setIsLoading(true);
-    const response = await getlogin(data as LoginType);
-    if (response.access_token) {
-      await Login(response.access_token);
-      router.push("/home");
+    try {
+      const response = await getlogin(data as LoginType);
+      if (response.success) {
+        await Login(response.access_token);
+        router.push("/home");
+        return;
+      }
+      setMessageError("Usuário ou senha inválidos");
+      setIsLoading(false);
+      return;
+    } catch {
+      setMessageError("Erro ao efetuar login");
+      setIsLoading(false);
       return;
     }
-    setMessageError("Usuário ou senha inválidos");
-    setIsLoading(false);
-    return;
   }
 
   return (
