@@ -114,6 +114,7 @@ export const FormTrasnfer = ({
               queryClient.invalidateQueries({ queryKey: ["transfers"] });
               queryClient.invalidateQueries({ queryKey: ["graphType"] });
               queryClient.invalidateQueries({ queryKey: ["graphMounth"] });
+              
               reset();
               if (close) {
                 close();
@@ -141,6 +142,7 @@ export const FormTrasnfer = ({
                 queryClient.invalidateQueries({ queryKey: ["transfers"] });
                 queryClient.invalidateQueries({ queryKey: ["graphType"] });
                 queryClient.invalidateQueries({ queryKey: ["graphMounth"] });
+
                 reset();
                 if (close) {
                   close();

@@ -36,7 +36,7 @@ export const CardComponent = ({
           >
             {bank}
           </h1>
-          <Link href={`card_transfer/${id}`} className="cursor-pointer">
+          <Link href={`card/${id}`} className="cursor-pointer">
             <Image src={info} alt="Info" width={20} height={20} title="Info" />
           </Link>
         </div>
