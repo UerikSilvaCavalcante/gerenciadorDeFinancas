@@ -61,7 +61,7 @@ const TransferDay = ({
         className={`${hammersmithOne.className} text-green-900 text-xl text-center w-fit `}
       >
         {dayjs(date)
-          .day(parseInt(date.split("-")[2]) - 3)
+          .day(parseInt(date.split("-")[2]) + 2)
           .format("ddd")}{" "}
         - {dayjs(date, "DD-MM-YYYY").format("DD/MM/YYYY")}
       </h1>
