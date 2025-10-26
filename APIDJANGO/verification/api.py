@@ -60,14 +60,14 @@ def send_mail(email, code):
 
 
 @router.post("/", response={200: MessageSchema, 400: MessageSchema})
-def get_code(request, email:GetCodeSchema):
+def get_code(request, email: GetCodeSchema):
     try:
         d_email = email.dict()
         user = UserModel.objects.get(email=d_email["email"])
         """
             Verifica se tem codigos anteriores, e se tiver deleta
         """
-        VerificationCode.objects.filter(user = user).delete()
+        VerificationCode.objects.filter(user=user).delete()
         d_user = model_to_dict(user)
         code = generete_code()
         salt = gensalt(rounds=8)
@@ -84,15 +84,15 @@ def get_code(request, email:GetCodeSchema):
         return 400, {"message": f"Erro ao enviar o email {ex}"}
 
 
-@router.post("/verify/", response={200: MessageSchema, 400: MessageSchema, 404: MessageSchema})
+@router.post(
+    "/verify/", response={200: MessageSchema, 400: MessageSchema, 404: MessageSchema}
+)
 def verify_code(request, code: CodeSchema):
     try:
         d_code = code.dict()
-        user = UserModel.objects.get(email = d_code["email"])
+        user = UserModel.objects.get(email=d_code["email"])
         stored_code = (
-            VerificationCode.objects.filter(
-                user=user, used=False
-            )
+            VerificationCode.objects.filter(user=user, used=False)
             .order_by("-created_at")
             .first()
         )
@@ -110,12 +110,12 @@ def verify_code(request, code: CodeSchema):
             stored_code.save(update_fields=["attempts"])
             return 400, {"message": "Codigo Invalido!"}
 
-
         stored_code.used = True
         stored_code.save()
         return 200, {"message": "Codigo verificado com sucesso!"}
     except Exception as ex:
         return 400, {"message": f"Erro ao verificar o codigo {ex}"}
+
 
 @router.post(
     "/password/",
@@ -129,7 +129,7 @@ def changePassword(request, password: PasswordSchema):
         user.encrypassword()
         user.save()
         user.refresh_from_db()
-        return 200 , {"message": "Senha alterada com sucesso!"}
+        return 200, {"message": "Senha alterada com sucesso!"}
     except UserModel.DoesNotExist:
         return 404, {"message": "Usuario nao encontrado!"}
     except Exception as ex:
