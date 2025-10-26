@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import back from "../assets/arrow-left-circle.svg";
 import { Input } from "../components/UI/input";
-import { hammersmithOne } from "../components/mainLayout";
+import { hammersmithOne, montserrat } from "../components/mainLayout";
 import { PrimaryButton } from "../components/UI/buttons";
 import getCode from "../http/getCode";
 import verifyCode from "../http/verifyCode";
@@ -68,6 +68,7 @@ const CodeField = ({
   email,
   handleLoad,
   togleField,
+  
 }: {
   email:string,
   handleLoad: (load:boolean) => void;
@@ -92,7 +93,19 @@ const CodeField = ({
     handleLoad(false);
 
   };
-
+  const resendEmail = async () => {
+    const res = await getCode(email);
+    if (res.success) {
+      toast.success(res.message);
+      
+      handleLoad(false);
+      togleField();
+      return;
+    }
+    toast.error(res.message);
+    
+    handleLoad(false);
+  }
   return (
     <div className="flex flex-col p-2.5 justify-center items-center w-full gap-2">
       <div className="flex flex-col justify-center items-center gap-2">
@@ -100,7 +113,7 @@ const CodeField = ({
           Codigo enviado!
         </h1>
         <p>
-          Um codigo foi enviado para o seu email, verifique e insira o codigo
+          Um codigo foi enviado para o seu email, verifique sua caixa de <strong>spam</strong> para ter certeza, e insira o codigo
           abaixo!
         </p>
       </div>
@@ -116,6 +129,7 @@ const CodeField = ({
           onClick={handleSubmit}
         />
       </div>
+      <p className={`${montserrat.className} text-center w-full underline cursor-pointer`} onClick={resendEmail}>Não recebeu o codigo ? envie novamente</p>
     </div>
   );
 };

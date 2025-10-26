@@ -14,7 +14,7 @@ from email.mime.base import MIMEBase
 from email import encoders
 from decouple import config
 from bcrypt import gensalt, checkpw
-
+from mailjet_rest import Client
 from user.schemas import MessageSchema
 from verification.schema import CodeSchema, GetCodeSchema, PasswordSchema
 
@@ -45,19 +45,24 @@ def send_mail(email, code):
     <p>Atenciosamente,<br>
     A equipe de Segurança do <strong>MoneyTrack</strong></p>
     """
+    api_key = config("API_KEY")
+    api_secret = config("API_SECRET")
+    mailjet = Client(auth=(api_key, api_secret), version="v3.1")
+    data = {
+        "Messages": [
+            {
+                "From": {"Email": config("EMAIL"), "Name": "MoneyTrack"},
+                "To": [{"Email": email, "Name": "Client"}],
+                "Subject": "Recovery Password!",
+                "TextPart": corpo_email,
+                "HTMLPart": corpo_email,
+            }
+        ]
+    }
 
-    msg = MIMEMultipart()
-    msg["From"] = config("EMAIL")
-    msg["To"] = email
-    msg["Subject"] = "Recuperar Senha"
-    msg.attach(MIMEText(corpo_email, "html"))
-
-    s = smtplib.SMTP("smtp.gmail.com: 587")
-    s.starttls()
-    s.login(msg["From"], config("EMAIL_PASSWORD"))
-    s.sendmail(msg["From"], [msg["To"]], msg.as_string())
-    s.quit()
-
+    result = mailjet.send.create(data=data)
+    return result.json()
+    
 
 @router.post("/", response={200: MessageSchema, 400: MessageSchema})
 def get_code(request, email: GetCodeSchema):
@@ -68,7 +73,7 @@ def get_code(request, email: GetCodeSchema):
             Verifica se tem codigos anteriores, e se tiver deleta
         """
         VerificationCode.objects.filter(user=user).delete()
-        d_user = model_to_dict(user)
+
         code = generete_code()
         salt = gensalt(rounds=8)
         bcode = code.encode("utf-8")
@@ -78,8 +83,11 @@ def get_code(request, email: GetCodeSchema):
         new_code = VerificationCode.objects.create(
             user=user, code_hash=code_hash, experired_at=experired_at
         )
-        send_mail(user.email, code)
-        return 200, {"message": "Email enviado com sucesso!"}
+        result = send_mail(user.email, code)
+        if result["Status"] == "success":
+            return 200, {"message": "Email enviado com sucesso!"}
+        else:
+            return 400, {"message": "Erro ao enviar o email!"}
     except Exception as ex:
         return 400, {"message": f"Erro ao enviar o email {ex}"}
 
