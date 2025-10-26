@@ -61,8 +61,9 @@ def send_mail(email, code):
     }
 
     result = mailjet.send.create(data=data)
+    res_json = result.json()
     return result.json()
-    
+
 
 @router.post("/", response={200: MessageSchema, 400: MessageSchema})
 def get_code(request, email: GetCodeSchema):
@@ -84,7 +85,7 @@ def get_code(request, email: GetCodeSchema):
             user=user, code_hash=code_hash, experired_at=experired_at
         )
         result = send_mail(user.email, code)
-        if result["Status"] == "success":
+        if result["Messages"][0]["Status"] == "success":
             return 200, {"message": "Email enviado com sucesso!"}
         else:
             return 400, {"message": "Erro ao enviar o email!"}
