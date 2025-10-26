@@ -3,7 +3,7 @@ import { Hammersmith_One, Montserrat } from "next/font/google";
 import eyeC from "../assets/eye-fill.svg";
 import eyeO from "../assets/eye-fill-o.svg";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,7 +14,6 @@ import { LoginType } from "../types/userType";
 import { AuthContext } from "../action/valid";
 import { useContext } from "react";
 import Loader from "../components/loader";
-import { Interface } from "readline";
 const hammersmithOne = Hammersmith_One({
   weight: "400",
   subsets: ["latin"],
@@ -32,6 +31,15 @@ const getLogin = z.object({
 type LoginForm = z.infer<typeof getLogin>;
 
 export default function Login() {
+  useEffect(() => {
+    getlogin({ username: "admin", password: "admin" })
+      .then((res) => {
+        return res;
+      })
+      .catch((error) => {
+        return error;
+      });
+  }); //ativa o servidor com um requisição qualquer
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [messageError, setMessageError] = useState("");
