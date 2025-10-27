@@ -123,7 +123,12 @@ def get_transfer(request, id: int):
 
 @router.post(
     "add",
-    response={201: MessageSchema, 404: MessageSchema, 500: MessageSchema, 400: MessageSchema},
+    response={
+        201: MessageSchema,
+        404: MessageSchema,
+        500: MessageSchema,
+        400: MessageSchema,
+    },
 )
 def add_transfer(request, transfer: TransferSchema):
     try:
@@ -218,7 +223,7 @@ def update_transfer(request, id: int, transfer: TransferSchema):
             str(db_transfer.card_id) if db_transfer.card_id else None
         )
         d_transfer["date"] = db_transfer.date.strftime("%Y-%m-%d")
-        return 200, d_transfer
+        return 200, {"message": "Transferencia atualizada com sucesso."}
     except Transfer.DoesNotExist:
         return 404, {"message": f"Gasto não encontrado."}
     except UserModel.DoesNotExist:

@@ -20,15 +20,17 @@ export default async function Page({
   } else {
     return (
       <MainLayout title="Detalhes da transferência">
-        <div className="w-full h-screen flex justify-center items-center">
-          <div className="w-[80vw] lg:w-[500px] h-full flex flex-col justify-center items-center gap-2.5 py-2.5">
+        <div className="w-full h-dvh flex justify-start items-center bg-green-200 rounded-xl">
+          <div className="w-[80vw] lg:w-[500px] h-[90%] flex flex-col justify-start items-center gap-2.5 py-2.5 ">
             <h1
               className={`${hammersmithOne.className} text-green-900 text-3xl font-bold text-center w-full `}
             >
               Informação do Gasto
             </h1>
 
-            <FormTrasnfer storedTransfer={data} />
+            <div className="w-full h-[50%] flex justify-center items-center">
+              <FormTrasnfer storedTransfer={data} />
+            </div>
           </div>
         </div>
       </MainLayout>

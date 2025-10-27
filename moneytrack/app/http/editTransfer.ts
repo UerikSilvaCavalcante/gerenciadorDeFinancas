@@ -25,12 +25,14 @@ export default async function editTransfer(
       card_id_id: transfer.card_id,
     }),
   });
-  const data = await response.json();
+  // const data = await response.json();
+  // console.table(data)
   if (response.ok) {
     return {
       success: true,
       message: "Transferência alterada com sucesso",
     };
   }
+  const data = await response.json();
   throw new Error(data.message);
 }

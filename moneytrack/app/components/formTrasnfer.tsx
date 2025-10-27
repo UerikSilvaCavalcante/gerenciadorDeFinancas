@@ -67,7 +67,7 @@ export const FormTrasnfer = ({
   } = useForm<transferFormType>({
     resolver: zodResolver(trasnferForm),
     defaultValues: {
-      value: storedTransfer?.value || 0,
+      value: storedTransfer?.value,
       type: storedTransfer?.type_transfer || 0,
       methood: storedTransfer?.payment_method || 0,
       data: (storedTransfer?.date as unknown as Date) || new Date(),
@@ -116,9 +116,7 @@ export const FormTrasnfer = ({
               queryClient.invalidateQueries({ queryKey: ["graphMounth"] });
               
               reset();
-              if (close) {
-                close();
-              }
+              
             }
             return res;
           }),
@@ -217,8 +215,8 @@ export const FormTrasnfer = ({
               <option value={1}>Lazer</option>
               <option value={2}>Alimentação</option>
               <option value={3}>Saúde</option>
-              <option value={4}>Trasnporte</option>
-              <option value={5}>Conta</option>
+              <option value={4}>Conta</option>
+              <option value={5}>Trasnporte</option>
               <option value={6}>Outro</option>
             </Select>
           </div>
