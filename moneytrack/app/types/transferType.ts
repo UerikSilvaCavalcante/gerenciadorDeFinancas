@@ -1,7 +1,7 @@
 export type TransferType = {
   id: number;
   user_id: number;
-  value: number;
+  value: string;
   description: string;
   date: Date;
   type_transfer: number;
@@ -11,7 +11,7 @@ export type TransferType = {
 
 export type RespnseTransferType = {
   id: number;
-  value: number;
+  value: string;
   date: string;
   description: string;
   type_transfer: number;

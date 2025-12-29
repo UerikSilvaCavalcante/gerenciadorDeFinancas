@@ -5,6 +5,14 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   width?: string;
 }
 
+interface CurrencyInputProps {
+  value?: string;
+  onChange?: (value: string) => void;
+  placeholder?: string;
+  className?: string;
+  [key: string]: any;
+}
+
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   width?: string;
   children?: React.ReactNode;
@@ -78,4 +86,78 @@ const Checkbox = ({
   );
 };
 
-export { Input, Checkbox, Select };
+const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
+  (
+    { value = "0.00", onChange, placeholder = "R$ 0,00", className, ...props },
+    ref
+  ) => {
+    // Converte string "1669.80" para centavos
+    const stringToCents = (str: string): number => {
+      const floatValue = parseFloat(str) || 0;
+      return Math.round(floatValue * 100);
+    };
+
+    // Converte centavos para string "1669.80"
+    const centsToString = (cents: number): string => {
+      return (cents / 100).toFixed(2);
+    };
+
+    const formatCurrency = (cents: number): string => {
+      const reais = cents / 100;
+      return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      }).format(reais);
+    };
+
+    const currentCents = stringToCents(value);
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      const allowedKeys = [
+        "Backspace",
+        "Delete",
+        "Tab",
+        "ArrowLeft",
+        "ArrowRight",
+      ];
+
+      if (allowedKeys.includes(e.key)) {
+        if (e.key === "Backspace") {
+          e.preventDefault();
+          const newCents = Math.floor(currentCents / 10);
+          onChange?.(centsToString(newCents)); // Retorna "1669.80"
+        }
+        return;
+      }
+
+      if (!/^\d$/.test(e.key)) {
+        e.preventDefault();
+        return;
+      }
+
+      e.preventDefault();
+      const digit = parseInt(e.key);
+      const newCents = currentCents * 10 + digit;
+
+      if (newCents <= 99999999) {
+        onChange?.(centsToString(newCents)); // Retorna "1669.80"
+      }
+    };
+
+    return (
+      <input
+        ref={ref}
+        type="text"
+        value={formatCurrency(currentCents)}
+        onKeyDown={handleKeyDown}
+        placeholder={placeholder}
+        className={`border border-green-950 rounded-sm p-1.5 text-sm  ${className}`}
+        {...props}
+        readOnly
+      />
+    );
+  }
+);
+CurrencyInput.displayName = "CurrencyInput";
+
+export { Input, Checkbox, Select , CurrencyInput};

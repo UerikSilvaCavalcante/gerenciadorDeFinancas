@@ -14,7 +14,7 @@ import { TypeTransferEnum } from "../enums/TransferEnums";
 
 dayjs.locale("pt-br");
 
-const types = [lazer, alimentacao, saude, conta,transporte, outros];
+const types = [lazer, alimentacao, saude, conta, transporte, outros];
 
 const hammersmithOne = Hammersmith_One({
   weight: "400",
@@ -55,15 +55,14 @@ const TransferDay = ({
   date: string;
   valueTot: number;
 }) => {
+  const formattedDate = dayjs(date, "DD-MM-YYYY"); // ou o formato correto da sua data
+
   return (
     <div className=" w-[100%] px-2 flex flex-row justify-between items-start  border-b-2 border-green-900 h-[30px]">
       <h1
         className={`${hammersmithOne.className} text-green-900 text-xl text-center w-fit `}
       >
-        {dayjs(date)
-          .day(parseInt(date.split("-")[2]) + 2)
-          .format("ddd")}{" "}
-        - {dayjs(date, "DD-MM-YYYY").format("DD/MM/YYYY")}
+        {formattedDate.format("ddd")} - {formattedDate.format("DD/MM/YYYY")}
       </h1>
       <p
         className={`${montserrat.className} text-green-900  text-center w-fit`}
@@ -116,7 +115,6 @@ const Trasnsfer = ({
         R$ {Number(value).toFixed(2)}
       </h1>
     </div>
-    
   </div>
 );
 

@@ -168,7 +168,7 @@ def add_transfer(request, transfer: TransferSchema):
 @router.put(
     "{int:id}",
     response={
-        200: MessageSchema,
+        201: MessageSchema,
         404: MessageSchema,
         500: MessageSchema,
         400: MessageSchema,
@@ -182,16 +182,15 @@ def update_transfer(request, id: int, transfer: TransferSchema):
         d_transfer = transfer.dict()
         if d_transfer["card_id"]:
             card = CardModel.objects.get(id=d_transfer["card_id"])
-            if d_transfer["payment_method"] in [1] and (
-                card.type_card != 1 or card.type_card != 3
-            ):
+            if d_transfer["payment_method"] in [1, 3] and (card.type_card == 2):
                 return 400, {
                     "message": f"Esse Tipo de Cartão não e aceito para o metodo de pagamento"
                 }
-            elif d_transfer["payment_method"] in [2] and card.type_card == 1:
+            if d_transfer["payment_method"] in [2] and (card.type_card == 1):
                 return 400, {
-                    "message": f"Esse Tipo de Cartão nao e aceito para o metodo de pagamento"
+                    "message": f"Esse Tipo de Cartão não e aceito para o metodo de pagamento"
                 }
+
             d_transfer["card_id"] = card
         else:
             d_transfer["card_id"] = None
@@ -223,7 +222,11 @@ def update_transfer(request, id: int, transfer: TransferSchema):
             str(db_transfer.card_id) if db_transfer.card_id else None
         )
         d_transfer["date"] = db_transfer.date.strftime("%Y-%m-%d")
-        return 200, {"message": "Transferencia atualizada com sucesso."}
+
+        return 201, {
+            "message": "Transferencia atualizada com sucesso.",
+            "content": d_transfer,
+        }
     except Transfer.DoesNotExist:
         return 404, {"message": f"Gasto não encontrado."}
     except UserModel.DoesNotExist:

@@ -1,9 +1,9 @@
 "use client";
 import { hammersmithOne } from "./mainLayout";
-import { Input, Select } from "./UI/input";
+import { Input, Select, CurrencyInput } from "./UI/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { PaymentMethodEnum, TypeTransferEnum } from "../enums/TransferEnums";
 import { TransferType } from "../types/transferType";
 import { parseCookies } from "nookies";
@@ -20,7 +20,7 @@ import editTransfer from "../http/editTransfer";
 
 const trasnferForm = z.object({
   value: z
-    .number({ message: "O valor mínimo é 0" })
+    .string({ message: "O valor mínimo é 0" })
     .min(0, { message: "O valor mínimo é 0" }),
   type: z.nativeEnum(TypeTransferEnum, {
     message: "Selecione pelo menos um tipo",
@@ -64,6 +64,7 @@ export const FormTrasnfer = ({
     formState: { errors },
     reset,
     setError,
+    control,
   } = useForm<transferFormType>({
     resolver: zodResolver(trasnferForm),
     defaultValues: {
@@ -114,9 +115,8 @@ export const FormTrasnfer = ({
               queryClient.invalidateQueries({ queryKey: ["transfers"] });
               queryClient.invalidateQueries({ queryKey: ["graphType"] });
               queryClient.invalidateQueries({ queryKey: ["graphMounth"] });
-              
-              reset();
-              
+              console.log(res);
+              reset(res.content);
             }
             return res;
           }),
@@ -185,14 +185,18 @@ export const FormTrasnfer = ({
               <p className="text-red-500">{errors.value.message}</p>
             )}
           </label>
-          <Input
-            id="value"
-            type="number"
-            placeholder="R$ 0,00"
-            width="w-full"
-            min={0}
-            step={0.01}
-            {...register("value", { valueAsNumber: true })}
+          <Controller
+            name="value"
+            control={control}
+            defaultValue="0"
+            render={({ field }) => (
+              <CurrencyInput
+                value={field.value}
+                onChange={field.onChange}
+                style={{ width: "100%" }}
+                placeholder="R$ 0,00"
+              />
+            )}
           />
         </div>
         <div className="w-full flex justify-between items-center gap-2">

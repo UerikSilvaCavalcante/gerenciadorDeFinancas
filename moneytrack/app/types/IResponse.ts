@@ -1,4 +1,5 @@
 export interface ResponseProps {
     success: boolean,
-    message: string
+    message: string,
+    content?: any
 } 

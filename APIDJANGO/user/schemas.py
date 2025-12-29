@@ -2,26 +2,29 @@ from ninja import ModelSchema, Schema
 
 from user.models import UserModel
 
+
 class UserSchema(ModelSchema):
     class Config:
         model = UserModel
-        model_fields = ['name', 'username', 'email', 'password']
+        model_fields = ["name", "username", "email", "password"]
+
 
 class ResponseUserSchema(ModelSchema):
     class Config:
         model = UserModel
-        model_fields = ['id', 'name', 'username', 'email', 'valorGasto']
-    
-
+        model_fields = ["id", "name", "username", "email", "valorGasto"]
 
 
 class LoginSchema(Schema):
-    username:str
-    password:str
+    username: str
+    password: str
+
 
 class TokenSchema(Schema):
     access_token: str
-    token_type: str = 'bearer'
+    token_type: str = "bearer"
+
 
 class MessageSchema(Schema):
     message: str
+    content: dict | None = None

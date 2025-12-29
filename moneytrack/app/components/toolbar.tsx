@@ -22,13 +22,9 @@ export const ToollBar = () => {
       <div className=" flex flex-row justify-center items-center p-0 m-0">
         <Image src={person} width={30} height={30} alt="person" />
       </div>
-      <Suspense
-        fallback={
-          <div className="w-[200px] h-7 bg-green-900 animate-pulse rounded-md"></div>
-        }
-      >
-        <User />
-      </Suspense>
+      
+      <User />
+      
       <Link href="/config">
         <Image src={gear} width={25} height={25} alt="config" />
       </Link>
