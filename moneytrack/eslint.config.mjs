@@ -14,7 +14,8 @@ const eslintConfig = [
   {
     rules: {
     "react/display-name": "off",
-    "react-hooks/exhaustive-deps": "off",
+    "react-hooks/exhaustive-deps": ["off", { allowAny: true }],
+    "@typescript-eslint/no-explicit-any": "off",
   }
   },
 ];

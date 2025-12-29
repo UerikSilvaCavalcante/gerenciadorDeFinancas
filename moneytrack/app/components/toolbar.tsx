@@ -3,7 +3,7 @@ import gear from "../assets/gear.svg";
 import Image from "next/image";
 import logout from "../assets/box-arrow-right.svg";
 import Link from "next/link";
-import { lazy, Suspense, useContext } from "react";
+import { lazy, useContext } from "react";
 import { AuthContext } from "../action/valid";
 import { useRouter } from "next/navigation";
 

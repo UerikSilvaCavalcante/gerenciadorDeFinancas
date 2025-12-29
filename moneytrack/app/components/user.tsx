@@ -1,6 +1,6 @@
 "use client";
 import { AuthContext } from "../action/valid";
-import { memo, useContext } from "react";
+import { useContext } from "react";
 import { hammersmithOne } from "./mainLayout";
 
 const User = () => {

@@ -1,14 +1,8 @@
 "use client";
 
-import {
-  Dialog,
-  DialogPanel,
-  DialogBackdrop,
-} from "@headlessui/react";
+import { Dialog, DialogPanel, DialogBackdrop } from "@headlessui/react";
 import { useState } from "react";
 import { hammersmithOne } from "./mainLayout";
-import { z } from "zod";
-import { PaymentMethodEnum, TypeTransferEnum } from "../enums/TransferEnums";
 import { FormTrasnfer } from "./formTrasnfer";
 export const useModelTransition = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,23 +11,6 @@ export const useModelTransition = () => {
   return { isOpen, open, close };
 };
 
-const trasnferForm = z.object({
-  value: z
-    .number({ message: "O valor mínimo é 0" })
-    .min(0, { message: "O valor mínimo é 0" }),
-  type: z.nativeEnum(TypeTransferEnum, {
-    message: "Selecione pelo menos um tipo",
-  }),
-  methood: z.nativeEnum(PaymentMethodEnum, {
-    message: "Selecione pelo menos um método",
-  }),
-  data: z.date({ message: "A data deve ser futura" }),
-  cartaoId: z.number(),
-  desc: z.string().optional(),
-});
-
-type transferFormType = z.infer<typeof trasnferForm>;
-
 export const ModalAddTransfer = ({
   isOpen,
   close,
@@ -41,7 +18,6 @@ export const ModalAddTransfer = ({
   isOpen: boolean;
   close: () => void;
 }) => {
-  
   return (
     <Dialog
       open={isOpen}

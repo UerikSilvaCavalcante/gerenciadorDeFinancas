@@ -37,7 +37,7 @@ export async function getlogin({
       access_token: data.access_token,
       token_type: data.token_type,
     };
-  } catch (e) {
+  } catch (error) {
     throw new Error("Erro no servidor");
   }
 }
