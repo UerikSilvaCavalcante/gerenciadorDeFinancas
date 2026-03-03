@@ -16,6 +16,15 @@ type AuthContextProps = {
 
 export const AuthContext = createContext({} as AuthContextProps);
 
+async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return await Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error("Timeout ao carregar usuário")), ms)
+    ),
+  ]);
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<ResponseUserType | null>(null);
   const isAuthenticaded = !!user;
@@ -51,20 +60,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       maxAge: 60 * 60 * 1,
     });
 
-    const decode = jwtDecode<{
-      id: string;
-      exp: number;
-    }>(TOKEN_KEY);
+    try {
+      const decode = jwtDecode<{
+        id: string;
+        exp: number;
+      }>(TOKEN_KEY);
 
-    const user = await getUserById(parseInt(decode.id), TOKEN_KEY);
-    setUser({
-      id: user.id,
-      name: user.name,
-      username: user.username,
-      email: user.email,
-      valorGasto: user.valorGasto,
-    });
-    return true;
+      const user = await withTimeout(
+        getUserById(parseInt(decode.id), TOKEN_KEY),
+        10000
+      );
+      setUser({
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        valorGasto: user.valorGasto,
+      });
+      return true;
+    } catch (error) {
+      destroyCookie(undefined, "token");
+      throw error;
+    }
   }
 
   function Logout() {

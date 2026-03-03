@@ -39,7 +39,7 @@ export default function Login() {
       .catch((error) => {
         return error;
       });
-  }); //ativa o servidor com um requisição qualquer
+  }, []); //ativa o servidor com um requisição qualquer
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [messageError, setMessageError] = useState("");
@@ -52,20 +52,26 @@ export default function Login() {
 
   async function handleSubmitForm(data: LoginForm) {
     setIsLoading(true);
+    setMessageError("");
     try {
       const response = await getlogin(data as LoginType);
       if (response.success) {
-        await Login(response.access_token);
-        router.push("/home");
-        return;
+        try {
+          await Login(response.access_token);
+          router.push("/home");
+          return;
+        } catch {
+          setMessageError("Não foi possível carregar seus dados. Tente novamente.");
+          return;
+        }
       }
       setMessageError("Usuário ou senha inválidos");
-      setIsLoading(false);
       return;
     } catch {
       setMessageError("Erro ao efetuar login");
-      setIsLoading(false);
       return;
+    } finally {
+      setIsLoading(false);
     }
   }
 
